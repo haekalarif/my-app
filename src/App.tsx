@@ -1,5 +1,8 @@
 import React from 'react';
-import { Stack, Text, Link, FontWeights, IStackTokens, IStackStyles, ITextStyles } from '@fluentui/react';
+import { Stack, Text, Link, FontWeights, IStackTokens, IStackStyles, ITextStyles, IIconProps } from '@fluentui/react';
+import { TextField} from '@fluentui/react/lib/TextField';
+import { DefaultButton, PrimaryButton, IconButton,CommandBarButton} from '@fluentui/react/lib/Button';
+import '../node_modules/office-ui-fabric-core/dist/css/fabric.min.css'
 import logo from './logo.svg';
 import './App.css';
 
@@ -13,32 +16,41 @@ const stackStyles: Partial<IStackStyles> = {
     color: '#605e5c',
   },
 };
+function handleSubmit(){
+  alert("Hello");
+}
+const saveIcon : IIconProps = {iconName:'Save',color:"#fff"}
 
 export const App: React.FunctionComponent = () => {
   return (
-    <Stack horizontalAlign="center" verticalAlign="center" verticalFill styles={stackStyles} tokens={stackTokens}>
-      <img className="App-logo" src={logo} alt="logo" />
-      <Text variant="xxLarge" styles={boldStyle}>
-        Welcome to your Fluent UI app
-      </Text>
-      <Text variant="large">For a guide on how to customize this project, check out the Fluent UI documentation.</Text>
-      <Text variant="large" styles={boldStyle}>
-        Essential links
-      </Text>
-      <Stack horizontal tokens={stackTokens} horizontalAlign="center">
-        <Link href="https://developer.microsoft.com/en-us/fluentui#/get-started/web">Docs</Link>
-        <Link href="https://stackoverflow.com/questions/tagged/office-ui-fabric">Stack Overflow</Link>
-        <Link href="https://github.com/microsoft/fluentui/">Github</Link>
-        <Link href="https://twitter.com/fluentui">Twitter</Link>
+    <Stack className="app">
+
+      <Stack className="form">
+        <div className="ms-Grid" dir="ltr">
+          <div className="ms-Grid-row">
+            <div className="ms-Grid-col ms-lg6">
+                <Text variant="xxLarge" className="mb-1">Add User</Text>
+              <form onSubmit={handleSubmit}>
+                <div className="mb-1">
+                  <TextField label="Firstname" name="firstname" placeholder="Username"/>
+                </div>
+                <div className="mb-1">
+                  <TextField label="Lastname" name="lastname" placeholder="Lastname" />
+                </div>
+                <div>
+                  <PrimaryButton text="Submit" type="submit"/>
+                </div>
+              </form>
+            </div>
+
+            <div className="ms-Grid-col ms-lg6">
+              <Text>User List</Text>
+            </div>
+
+          </div>
+        </div>
       </Stack>
-      <Text variant="large" styles={boldStyle}>
-        Design system
-      </Text>
-      <Stack horizontal tokens={stackTokens} horizontalAlign="center">
-        <Link href="https://developer.microsoft.com/en-us/fluentui#/styles/web/icons">Icons</Link>
-        <Link href="https://developer.microsoft.com/en-us/fluentui#/styles/web">Styles</Link>
-        <Link href="https://aka.ms/themedesigner">Theme designer</Link>
-      </Stack>
+
     </Stack>
   );
 };
