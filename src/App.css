@@ -1,38 +1,68 @@
-.App {
+.events {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.events .ant-badge-status {
+  width: 100%;
+  overflow: hidden;
+  font-size: 12px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.notes-month {
+  font-size: 28px;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.notes-month section {
+  font-size: 28px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.ant-picker-calendar-full .ant-picker-panel .ant-picker-calendar-date-today {
+  border-top: 7px solid #1890ff !important;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.ant-picker-calendar-full .ant-picker-panel .ant-picker-calendar-date {
+  height: 70px !important;
+}
+
+.ant-picker-calendar-full .ant-picker-panel .ant-picker-calendar-date-content {
+  height: 30px !important;
+}
+
+.item-body {
+  border-left: 5px solid #1890ff;
+  border-right: 1px solid #ededed;
+  border-bottom: 1px solid #ededed;
+  border-top: 1px solid #ededed;
+  border-radius: 5px;
+  min-height: 70px;
+  padding: 10px;
+  margin: 10px 0px;
+}
+
+.item-body:hover {
+  background: #f8f8f8;
+}
+
+.loading {
+  position: fixed;
+  /* Sit on top of the page content */
+  width: 100%;
+  /* Full width (cover the whole page) */
+  height: 100%;
+  /* Full height (cover the whole page) */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  align-items: center;
+  z-index: 9999999;
 }

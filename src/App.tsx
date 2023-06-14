@@ -1,24 +1,18 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import ReactBigCalendar from './components/ReactBigCalendar';
 import './App.css';
+import ReactScheduler from './components/ReactScheduler';
+import AntdCalendar from './components/AntdCalendar';
+import { initializeIcons } from '@fluentui/react';
 
 function App() {
+  initializeIcons();
+  
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {/* <ReactBigCalendar/> */}
+      {/* <ReactScheduler/> */}
+      <AntdCalendar />
     </div>
   );
 }
