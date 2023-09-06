@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import 'antd/dist/antd.css';
 import '../App.css';
-import { Calendar, Tag, Tooltip } from 'antd';
+import { Badge, Calendar, Tag, Tooltip } from 'antd';
 import format from 'date-fns/format';
 import { ActionButton, FontIcon, IPanelStyleProps, IPanelStyles, IStyleFunctionOrObject, Panel, PanelType, Stack, Text, Dropdown, IDropdownStyles, IDropdownOption, TooltipHost, TooltipDelay, ITooltipHostStyles, DefaultButton, ITooltipProps, IconButton, PersonaSize, Persona, Label, Spinner, SpinnerSize } from '@fluentui/react';
 import { useBoolean } from '@fluentui/react-hooks';
 import { DragDropContext, Draggable, DropResult, Droppable } from 'react-beautiful-dnd';
-import { eachDayOfInterval, endOfMonth, setMonth, setYear, startOfMonth } from 'date-fns';
+import { add, eachDayOfInterval, endOfMonth, getDate, getMonth, getYear, setMonth, setYear, startOfMonth } from 'date-fns';
+import { isMobile } from 'react-device-detect';
+import scrollIntoView from 'scroll-into-view';
+import moment from 'moment';
 
 const data = [
     {
@@ -299,7 +302,8 @@ const iconOpenPanelStyles: any = {
 
 const panelStyles: IStyleFunctionOrObject<IPanelStyleProps, IPanelStyles> = {
     navigation: {
-        minHeight: 70,
+        // minHeight: 70,
+        height: 0,
         borderBottom: '2px solid #ededed',
         alignItems: "center",
         padding: '0px 20px'
@@ -309,7 +313,7 @@ const panelStyles: IStyleFunctionOrObject<IPanelStyleProps, IPanelStyles> = {
         boxShadow: "",
     },
     footer: {
-        marginTop: 200
+        // marginTop: 200
     }
 }
 
@@ -335,25 +339,19 @@ const AntdCalendar: React.FC<ICalendarView> = (props) => {
 
     const now = new Date();
     const [headerDate, setHeaderDate] = useState<string>(format(new Date(), "EEE, LLL d"));
-    const [isOpen, { setTrue: openPanel, setFalse: dismissPanel }] = useBoolean(true);
+    const [isOpen, { setTrue: openPanel, setFalse: dismissPanel }] = useBoolean(isMobile ? false : true);
     const [tickets, setTickets] = useState<any>(data);
     const [selectDate, setSelectDate] = useState<any>(format(now, 'yyyy-MM-dd'));
     const [onDrag, setOnDrag] = useState<boolean>(false);
-    const [viewMode, setViewMode] = useState<"list" | "calendar">("list");
-
+    const [viewMode, setViewMode] = useState<"list" | "calendar">("calendar");
+    const [allDates, setAllDates] = useState<any[]>([]);
     const cellRenderFunc = (date): JSX.Element => {
         // console.log(new Date(date))
         // check on each ticket expected date
         const ticketList = tickets?.filter((item) => format(new Date(item.expectedDate), 'yyyy-MM-dd') == format(new Date(date), 'yyyy-MM-dd')) ?? [];
 
         const today = format(new Date(date), 'yyyy-MM-dd') == format(now, 'yyyy-MM-dd');
-
-        const currentDate = new Date(); // Get the current date
-        const startDate = startOfMonth(currentDate); // Get the start date of the current month
-        const endDate = endOfMonth(currentDate); // Get the end date of the current month
-        // console.log(startDate)
-        // console.log(endDate)
-
+        const countTicket = ticketList.length;
         return (
             <Droppable droppableId={`event_${new Date(date)}`}>
                 {(provided: any, snapshot: any) => (
@@ -400,10 +398,12 @@ const AntdCalendar: React.FC<ICalendarView> = (props) => {
                                         )}
                                     </Draggable>
                                 ))}
+                                <Badge count={countTicket} color="red" />
                             </div>
                             {today &&
                                 <ActionButton iconProps={{ iconName: "More" }} />
                             }
+
                         </div>
                         {/* {provided.placeholder} */}
                     </div>
@@ -420,13 +420,17 @@ const AntdCalendar: React.FC<ICalendarView> = (props) => {
         const months = [];
         const current = value.clone();
         const localeData = value.localeData();
-        const month = value.month();
-        const year = value.year();
+        const month = selectDate ? getMonth(selectDate) : value.month();
+        const year = selectDate ? getYear(selectDate) : value.year();
+
+        console.log(getMonth(new Date(value)));
+        console.log(year);
         for (let i = start; i < end; i++) {
             current.month(i);
             months.push(localeData.monthsShort(current));
         }
         for (let i = start; i < end; i++) {
+            console.log(months[i])
             monthOptions.push({ key: i, text: months[i] });
         }
         for (let i = year - 5; i < year + 6; i += 1) {
@@ -456,6 +460,7 @@ const AntdCalendar: React.FC<ICalendarView> = (props) => {
                             selectedKey={month}
                             onChange={(event: React.FormEvent<HTMLDivElement>, option?: IDropdownOption, index?: number) => {
                                 const newValue = value.clone();
+                                console.log(getDate(new Date(newValue)))
                                 newValue.month(parseInt(String(option?.key), 10));
                                 onChange(newValue);
                                 const params = `${year}-${newValue.month() + 1}`;
@@ -470,10 +475,10 @@ const AntdCalendar: React.FC<ICalendarView> = (props) => {
     }
 
     function handleRenderNavigationContent(props) {
-        return (
-            <div className="header" style={{ width: '100%' }}>
-                <Text variant="xLarge">{headerDate}</Text>
-            </div>
+        return (<></>
+            // <div className="header" style={{ width: '100%' }}>
+            //     <Text variant="xLarge">{headerDate}</Text>
+            // </div>
         )
     }
     function handleRenderFooterContent(props) {
@@ -497,16 +502,36 @@ const AntdCalendar: React.FC<ICalendarView> = (props) => {
         activeTicket.expectedDate = format(new Date(data.destination.droppableId.split("_")[1]), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         setTickets((item) => item.map((i) => i.id == id ? activeTicket : i));
     }
+
+    const handleScroll = (date) => {
+        const element = document.querySelector<HTMLElement>(`.scroll-target-${format(new Date(date), 'yyyy-MM-dd')}`);
+        if (element) {
+            console.log('Scrolling into element');
+            scrollIntoView(element, {
+                align: {
+                    top: 0,
+                },
+            });
+        }
+    }
+
     function handleSelectDate(date: any) {
         const value = format(new Date(date), 'yyyy-MM-dd');
+        const currentDate = new Date(value); // Get the current date
+        const startDate = startOfMonth(currentDate); // Get the start date of the current month
+        const endDate = endOfMonth(currentDate); // Get the end date of the current month
+        const allDates = eachDayOfInterval({ start: startDate, end: endDate });
 
         if (onDrag) return;
         if (selectDate == value) {
             setHeaderDate(format(new Date(value), "EEE, LLL d"));
+            setAllDates(allDates);
             openPanel();
-        } else {
-            setSelectDate(value);
+            setTimeout(() => {
+                handleScroll(value);
+            }, 100);
         }
+        setSelectDate(value);
     }
 
     function StatusRender(props) {
@@ -517,7 +542,7 @@ const AntdCalendar: React.FC<ICalendarView> = (props) => {
                     <Tag
                         color={StatusColorEnum.open}
                         key={`${item.id}_${item.status}`}
-                        style={{ color: '#000000', border: '1px solid #000000' }}
+                        style={{ color: '#000000', border: '1px solid #000000', fontSize: 8 }}
                     >
                         Open
                     </Tag>
@@ -527,6 +552,7 @@ const AntdCalendar: React.FC<ICalendarView> = (props) => {
                     <Tag
                         color={StatusColorEnum.inProgress}
                         key={`${item.id}_${item.status}`}
+                        style={{ fontSize: 8 }}
                     >
                         In Progress
                     </Tag>
@@ -536,6 +562,7 @@ const AntdCalendar: React.FC<ICalendarView> = (props) => {
                     <Tag
                         color={StatusColorEnum.reopened}
                         key={`${item.id}_${item.status}`}
+                        style={{ fontSize: 8 }}
                     >
                         Reopened
                     </Tag>
@@ -545,6 +572,7 @@ const AntdCalendar: React.FC<ICalendarView> = (props) => {
                     <Tag
                         color={StatusColorEnum.resolved}
                         key={`${item.id}_${item.status}`}
+                        style={{ fontSize: 8 }}
                     >
                         Resolved
                     </Tag>
@@ -554,6 +582,7 @@ const AntdCalendar: React.FC<ICalendarView> = (props) => {
                     <Tag
                         color={StatusColorEnum.closed}
                         key={`${item.id}_${item.status}`}
+                        style={{ fontSize: 8 }}
                     >
                         Closed
                     </Tag>
@@ -576,7 +605,7 @@ const AntdCalendar: React.FC<ICalendarView> = (props) => {
                             <Tag
                                 color={tagCategory ? tagCategory.color : "error"}
                                 key={`${e.tagCategoryId}_${e.text}`}
-                                style={{ fontSize: 10 }}
+                                style={{ fontSize: 8 }}
                             >
                                 {e.text.toUpperCase()}
                             </Tag>
@@ -597,7 +626,7 @@ const AntdCalendar: React.FC<ICalendarView> = (props) => {
                                         <Tooltip title={e.text.toUpperCase()} placement="top" >
                                             <a style={{ display: "inline-block" }}>
                                                 <Tag
-                                                    style={{ margin: 2, fontSize: 10 }}
+                                                    style={{ margin: 2, fontSize: 8 }}
                                                     color={tagCategory ? tagCategory.color : "error"}
                                                     key={`${e.tagCategoryId}_${e.text}`}>
                                                     {e.text.toUpperCase()}
@@ -630,32 +659,34 @@ const AntdCalendar: React.FC<ICalendarView> = (props) => {
             <Stack className="item-body" horizontal>
                 <Stack tokens={{ childrenGap: 10 }} style={{ width: '60%' }}>
                     <Stack horizontal verticalAlign="center" tokens={{ childrenGap: 25 }} horizontalAlign="start">
-                        <Text style={{ color: "#797775" }}><strong>ID: {item.ticketId}</strong></Text>
+                        <Text style={{ color: "#797775", fontSize: 10 }}><strong>ID: {item.ticketId}</strong></Text>
                         <Stack horizontal verticalAlign="stretch" tokens={{ childrenGap: 5 }} style={{ width: 75 }}>
                             <FontIcon
                                 iconName={iconlist[item.priority].iconName}
                                 style={{ color: iconlist[item.priority].color }}
                             />
-                            <Text>{iconlist[item.priority].name}</Text>
+                            <Text style={{ fontSize: 10 }}>{iconlist[item.priority].name}</Text>
                         </Stack>
                         <StatusRender item={item} />
                     </Stack>
-                    <Stack title={item.title}>{(item.title.length > 80) ? `${item.title.substring(0, 81)} ...` : item.title}</Stack>
+                    <Stack title={item.title}>{(item.title.length > 80) ? `${item.title.substring(0, isMobile ? 20 : 81)} ...` : item.title}</Stack>
                     <Stack>
                         <TagRender item={item} />
                     </Stack>
                 </Stack>
-                <Stack tokens={{ childrenGap: 8 }}>
+                <Stack tokens={{ childrenGap: 8 }} style={{ marginLeft: isMobile ? 'auto' : '' }}>
                     {item?.requestorId &&
                         <Persona
                             text={item.requestorName}
                             size={PersonaSize.size24}
+                            onRenderPrimaryText={isMobile ? () => (<></>) : undefined}
                         />
                     }
                     {item?.assigneeId &&
                         <Persona
                             text={item.assigneeName}
                             size={PersonaSize.size24}
+                            onRenderPrimaryText={isMobile ? () => (<></>) : undefined}
                         />
                     }
                 </Stack>
@@ -666,11 +697,57 @@ const AntdCalendar: React.FC<ICalendarView> = (props) => {
         )
     }
 
-    const year = 2023; // Replace with your desired year
-    const month = 5; // Replace with your desired month (Note: month index starts from 0)
+    async function handleOnScroll(e) {
+        console.log("scroll event")
+        const selectedDate = new Date(selectDate);
+        let date: Date = new Date();
+        let currentMonth = getMonth(selectedDate);
+        let currentYear = getYear(selectedDate);
+        let startDate;
+        let endDate;
+        let tickets;
+        // scroll Top
+        if ((e.target.scrollTop + e.target.offsetHeight + 1) >= e.target.scrollHeight) {
+            if (currentMonth == 12) {
+                currentMonth = 1;
+                currentYear += 1;
+            } else {
+                currentMonth += 1;
+            }
+            date.setMonth(currentMonth);
+            date.setFullYear(currentYear);
+            startDate = format(startOfMonth(date), "yyyy-MM-dd"); // Get the start date of the current month
+            endDate = format(endOfMonth(date), "yyyy-MM-dd"); // Get the end date of the current month
+            console.log(startDate);
+            console.log(endDate);
 
-    const date = format(setMonth(setYear(new Date(), year), month), 'yyyy-MM-dd');
-    console.log(date)
+        } else if (e.target.scrollTop == 0) {//scroll Bottom
+            if (currentMonth == 1) {
+                currentMonth = 12;
+                currentYear -= 1;
+            } else {
+                currentMonth -= 1;
+            }
+            date.setMonth(currentMonth);
+            date.setFullYear(currentYear);
+            startDate = format(startOfMonth(date), "yyyy-MM-dd"); // Get the start date of the current month
+            endDate = format(endOfMonth(date), "yyyy-MM-dd"); // Get the end date of the current month
+            console.log(startDate)
+            console.log(endDate);
+
+        }
+
+    }
+    useEffect(() => {
+        const tableHeader = document.querySelector('.ant-picker-content thead tr');
+        console.log(tableHeader)
+        const columns = tableHeader.getElementsByTagName('th');
+        console.log(columns);
+        // Modify the content of each column
+        for (let i = 0; i < columns.length; i++) {
+            columns[i].textContent = `Column ${i + 1}`;
+        }
+    }, []);
     return (
         <DragDropContext
             onDragStart={() => setOnDrag(true)}
@@ -719,6 +796,8 @@ const AntdCalendar: React.FC<ICalendarView> = (props) => {
                                     headerRender={headerRender}
                                     onSelect={handleSelectDate}
                                     className='defaultpanel'
+                                    value={moment(new Date('2023-07-01'))}
+                                // defaultValue={format(new Date('2023-07-01'), 'yyyy-MM-dd')}
                                 />
                             </div>
                             <ActionButton
@@ -738,7 +817,43 @@ const AntdCalendar: React.FC<ICalendarView> = (props) => {
                                 onRenderFooterContent={handleRenderFooterContent}
                                 isFooterAtBottom={true}
                             >
-                                <div className="body" style={{ margin: '20px 0px' }}>
+
+                                <div className="body" style={{ margin: '20px 0px', overflowY: "auto", maxHeight: `calc(100vh - 50px)` }} onScroll={(e) => handleOnScroll(e)} data-is-scrollable={true}>
+
+                                    {allDates.map((date, index) => {
+                                        return (
+                                            <div style={{ marginBottom: 20 }}>
+                                                {(index == 0) &&
+                                                    <Stack horizontal verticalAlign='center' tokens={{ childrenGap: 15 }}>
+                                                        <div className="line-with-text">
+                                                            <div className="line"></div>
+                                                            <div className="text">
+                                                                <Text variant='large'>
+                                                                    <strong>
+                                                                        {format(date, 'MMM yyyy')}
+                                                                    </strong>
+                                                                </Text>
+                                                            </div>
+                                                            <div className="line"></div>
+                                                        </div>
+                                                    </Stack>
+                                                }
+                                                <Stack style={{ marginBottom: 10 }} className={`scroll-target-${format(new Date(date), 'yyyy-MM-dd')}`}>
+                                                    <Text><strong>{format(date, 'd EEEE')}</strong></Text>
+                                                </Stack>
+                                                {data.filter((item) => format(new Date(item?.expectedDate), 'yyyy MM dd') == format(date, 'yyyy MM dd')).length > 0 &&
+                                                    <Stack style={{ minHeight: 70 }}>
+                                                        {data.filter((item) => format(new Date(item?.expectedDate), 'yyyy MM dd') == format(date, 'yyyy MM dd')).map((item) => {
+                                                            return (<CardRender item={item} />)
+                                                        })}
+                                                    </Stack>
+                                                }
+                                                {data.filter((item) => format(new Date(item?.expectedDate), 'yyyy MM dd') == format(date, 'yyyy MM dd')).length == 0 &&
+                                                    <Text>No Plans</Text>
+                                                }
+                                            </div>
+                                        )
+                                    })}
                                     {data.map((item) => {
                                         return (<CardRender item={item} />)
                                     })
