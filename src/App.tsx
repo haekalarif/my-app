@@ -15,6 +15,7 @@ import SlaCalculate from './components/SlaCalculate';
 import ModalComponent from './components/ModalComponent';
 import Complete from './components/Complete';
 import Workflow from './components/TicketWorkflow/Workflow';
+import ReactWorkFlow from './components/TicketWorkflow/ReactWorkFlow';
 
 function App() {
   initializeIcons();
@@ -35,7 +36,8 @@ function App() {
       {/* <SlaCalculate /> */}
       {/* <ModalComponent/> */}
       {/* <Complete/> */}
-      <Workflow/>
+      {/* <Workflow/> */}
+      <ReactWorkFlow/>
     </div>
   );
 }

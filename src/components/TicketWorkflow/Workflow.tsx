@@ -319,7 +319,7 @@ const Workflow: React.FC = (props) => {
         <Stack horizontal verticalAlign="center" horizontalAlign={"center"}>
             {/* <ActionButtons /> */}
             {/* <ListActionButton/> */}
-            <Board/>
+            {/* <Board/> */}
         </Stack>
     )
 }
