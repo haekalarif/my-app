@@ -25,7 +25,7 @@ const classNames = mergeStyleSets({
     mainBody: {
         display: "block",
         margin: "auto",
-        padding: "100px 250px",
+        padding: "100px 200px",
         flexFlow: "row nowrap",
         boxSizing: "border-box",
         overflow: "hidden",
@@ -57,9 +57,14 @@ const classNames = mergeStyleSets({
         padding: "auto",
     },
     buttons: {
-        margin: "auto",
+        marginInline: "auto",
         borderRadius: 8,
-        padding: 20
+        padding: 20,
+        selectors: {
+            'span': {
+                margin: '0px !important',
+            }
+        }
     },
     wrapper: {
         display: 'flex',
@@ -118,13 +123,11 @@ const classNames = mergeStyleSets({
         borderRadius: '8px',
         backgroundColor: '#fff',
         selectors: {
-            'span:last-child': {
-                // Define your special styling for the last Stack item here
-                marginTop: '6px',
-            }
+            '&>*:not(:first-child)': {
+                marginTop: '10px',
+            },
         }
     },
-    // textContent:
 });
 
 const horizontalGapStackTokens: IStackTokens = {
@@ -132,10 +135,7 @@ const horizontalGapStackTokens: IStackTokens = {
 };
 
 // const styles
-const popUpGettingStarted = (event: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement | HTMLDivElement | HTMLSpanElement, MouseEvent>): void => {
-    const popUpURL: string = "https://www.teamswork.app/getting-started-microsoft-teams-ticketing";
-    window.open(popUpURL);
-}
+const popUpGettingStarted = (link: string) => window.open(link);
 
 const MenuHeader: React.FunctionComponent<any> = (props) => {
     return (
@@ -164,20 +164,17 @@ const Complete: React.FC = (props) => {
                                 <Text className={classNames.thank}>Thank You!</Text>
                                 <Text className={classNames.subs}>For Subscribing to our <Text className={classNames.ticketingApp}>Ticketing App!</Text></Text>
                                 <Stack className={classNames.textInfo}>
-                                    <Text>You can close this window, return to Ticketing App and enjoy <br /> your new Benefits. If you need Assistance with your <br /> subscription, please <a href="https://www.teamswork.app/contact" target="_blank">contact us</a></Text>
-                                    <Text>Please check our Getting Started page to configure a new <br /> Ticketing App instance.</Text>
+                                    <Text>You can close this window, return to Ticketing App and enjoy your new Benefits.</Text>
+                                    <PrimaryButton className={classNames.buttons} onClick={() => popUpGettingStarted('https://teams.microsoft.com/')}>
+                                        Navigate to Microsoft Teams
+                                    </PrimaryButton>
+                                    <Text>If you need Assistance with your subscription, please <a href="https://www.teamswork.app/contact" target="_blank">contact us.</a></Text>
                                 </Stack>
                             </Stack>
                         </div>
                     </div>
-
-                    <Stack horizontal tokens={horizontalGapStackTokens} style={{ alignItems: "center" }}>
-                        <PrimaryButton className={classNames.buttons} onClick={popUpGettingStarted}>
-                            Getting Started Guide
-                        </PrimaryButton>
-                    </Stack>
                 </div>
-            </body >
+            </body>
         </div >
     );
 }

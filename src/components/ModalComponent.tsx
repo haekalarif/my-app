@@ -20,7 +20,7 @@ const ModalComponent: React.FC<any> = (props) => {
                 return event.stopPropagation();
             }}>
                 <AntdModal
-                    open={isModalOpen}
+                    visible={isModalOpen}
                     onCancel={() => setIsModalOpen(!!!isModalOpen)}
                     footer={null}
                     // width={}

@@ -14,7 +14,7 @@ import { v4 as uuidv4 } from 'uuid';
 import 'antd/dist/antd.css';
 
 const localizer = momentLocalizer(moment);
-const DnDCalendar = withDragAndDrop(Calendar);
+// const DnDCalendar = withDragAndDrop(Calendar);
 
 initializeIcons();
 
@@ -197,7 +197,7 @@ function ReactBigCalendar(props) {
 
     return (
         <div className="App">
-            <DnDCalendar
+            {/* <DnDCalendar
                 defaultDate={moment().toDate()}
                 defaultView="month"
                 events={events}
@@ -220,10 +220,13 @@ function ReactBigCalendar(props) {
                 }}
                 selectable={true}
                 eventPropGetter={eventStyleGetter}
+            /> */}
+            <PrimaryButton
+                text={"Open modal"}
+                onClick={() => setIsModalOpen(true)}
             />
-
             <Modal
-                open={isModalOpen}
+                visible={isModalOpen}
                 destroyOnClose={true}
                 modalRender={() => {
                     return (
@@ -243,7 +246,7 @@ function ReactBigCalendar(props) {
                                 <Text>{moment(dateInfo).format('dddd, DD / MM / YYYY')}</Text>
                             </div>
                             <div style={{ marginBottom: 15 }}>
-                                <TextField label="Title" onChange={handleChangeTitle} value={title} disabled={action == "view"} />
+                                <TextField label="Title" onChange={handleChangeTitle} value={title} disabled={action == "view"} autoFocus />
                             </div>
                             <div style={{ marginBottom: 15 }}>
                                 <TextField label="Description" multiline rows={3} onChange={handleChangeDescription} value={description} disabled={action == "view"} />
@@ -312,6 +315,12 @@ function ReactBigCalendar(props) {
                 }}
             >
             </Modal>
+
+            {/* <Modal
+                isOpen={isModalOpen}
+            >
+                <TextField label="Title" onChange={handleChangeTitle} value={title} disabled={action == "view"} autoFocus />
+            </Modal> */}
         </div>
     );
 }

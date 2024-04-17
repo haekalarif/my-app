@@ -95,7 +95,7 @@ export const PeoplePickerNormalExample: React.FunctionComponent = () => {
         showSecondaryText: true,
       },
     };
-
+    // return(<></>)
     return <PeoplePickerItem {...newProps} />;
   };
 
@@ -141,7 +141,7 @@ export const PeoplePickerNormalExample: React.FunctionComponent = () => {
           text: "Haekal Arif Rozikin"
         }]}
       />
-      <Checkbox
+      {/* <Checkbox
         label="Disable People Picker"
         checked={isPickerDisabled}
         // eslint-disable-next-line react/jsx-no-bind
@@ -161,7 +161,7 @@ export const PeoplePickerNormalExample: React.FunctionComponent = () => {
         // eslint-disable-next-line react/jsx-no-bind
         onChange={onToggleShowSecondaryText}
         styles={checkboxStyles}
-      />
+      /> */}
     </div>
   );
 };

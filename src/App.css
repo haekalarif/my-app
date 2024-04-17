@@ -94,9 +94,11 @@
 *::-webkit-scrollbar {
   width: 12px;
 }
+
 *::-webkit-scrollbar-track {
   background: rgb(220, 220, 220);
 }
+
 *::-webkit-scrollbar-thumb {
   background-color: #c7c7c7;
   border-radius: 20px;
@@ -105,177 +107,191 @@
 
 .ql-font-sansSerif,
 .ql-font span[data-value="sansSerif"]::before {
-    font-family: sans-serif;
+  font-family: sans-serif;
 }
 
 .ql-snow .ql-picker.ql-font .ql-picker-label[data-value=sansSerif]::before,
 .ql-snow .ql-picker.ql-font .ql-picker-item[data-value=sansSerif]::before {
-    content: 'Sans Serif';
+  content: 'Sans Serif';
 }
 
 .ql-font-calibri,
 .ql-font span[data-value="calibri"]::before {
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri;
 }
 
 .ql-snow .ql-picker.ql-font .ql-picker-label[data-value=calibri]::before,
 .ql-snow .ql-picker.ql-font .ql-picker-item[data-value=calibri]::before {
-    content: 'Calibri';
+  content: 'Calibri';
 }
 
 .ql-font-segoeUi,
 .ql-font span[data-value="segoeUi"]::before {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .ql-snow .ql-picker.ql-font .ql-picker-label[data-value=segoeUi]::before,
 .ql-snow .ql-picker.ql-font .ql-picker-item[data-value=segoeUi]::before {
-    content: 'Segoe UI';
+  content: 'Segoe UI';
 }
 
 .ql-font-timesNewRoman,
 .ql-font span[data-value="timesNewRoman"]::before {
-    font-family: 'Times New Roman', Times, serif;
+  font-family: 'Times New Roman', Times, serif;
 }
 
 .ql-snow .ql-picker.ql-font .ql-picker-label[data-value=timesNewRoman]::before,
 .ql-snow .ql-picker.ql-font .ql-picker-item[data-value=timesNewRoman]::before {
-    content: 'Times New Roman';
+  content: 'Times New Roman';
 }
 
 .ql-font-monospace,
 .ql-font span[data-value="monospace"]::before {
-    font-family: monospace;
+  font-family: monospace;
 }
 
 .ql-snow .ql-picker.ql-font .ql-picker-label[data-value=monospace]::before,
 .ql-snow .ql-picker.ql-font .ql-picker-item[data-value=monospace]::before {
-    content: 'Monospace';
+  content: 'Monospace';
 }
 
 .ql-snow .ql-picker.ql-font {
-    width: 135px;
+  width: 135px;
 }
 
 .ql-container {
-    min-height: 116px;
+  min-height: 116px;
 }
 
 .ql-disabled {
-    background-color: #f3f2f1;
-    border: none !important;
+  background-color: #f3f2f1;
+  border: none !important;
 }
 
 .ql-align-center {
-    text-align: center;
+  text-align: center;
 }
 
 .ql-align-right {
-    text-align: right;
+  text-align: right;
 }
 
 .ql-align-justify {
-    text-align: justify;
+  text-align: justify;
 }
 
 .ql-size-small {
-    font-size: 0.75em;
+  font-size: 0.75em;
 }
 
 .ql-size-large {
-    font-size: 1.5em;
+  font-size: 1.5em;
 }
 
 .ql-size-huge {
-    font-size: 2.5em;
+  font-size: 2.5em;
 }
 
-.ant-picker-calendar.ant-picker-calendar-full.ant-picker-panel.ant-picker-body th:nth-child(1){
+.ant-picker-calendar.ant-picker-calendar-full.ant-picker-panel.ant-picker-body th:nth-child(1) {
   display: none;
 }
-.ant-picker-calendar-full .ant-picker-panel .ant-picker-body th:nth-child(1){
+
+.ant-picker-calendar-full .ant-picker-panel .ant-picker-body th:nth-child(1) {
   content: "Asu" !important;
 }
+
 /* sunday */
-.ant-fullcalendar.ant-fullcalendar-full>div>table>thead>
-tr th:nth-child(1)>span{
+.ant-fullcalendar.ant-fullcalendar-full>div>table>thead>tr th:nth-child(1)>span {
   display: none;
 }
-.ant-fullcalendar.ant-fullcalendar-full>div>table>thead>
-tr th:nth-child(1):after{
+
+.ant-fullcalendar.ant-fullcalendar-full>div>table>thead>tr th:nth-child(1):after {
   content: "Sun";
   display: block;
   font-weight: normal;
 }
 
 /* monday */
-.ant-fullcalendar.ant-fullcalendar-full>div>table>thead>
-tr th:nth-child(2)>span{
+.ant-fullcalendar.ant-fullcalendar-full>div>table>thead>tr th:nth-child(2)>span {
   display: none;
 }
-.ant-fullcalendar.ant-fullcalendar-full>div>table>thead>
-tr th:nth-child(2):after{
+
+.ant-fullcalendar.ant-fullcalendar-full>div>table>thead>tr th:nth-child(2):after {
   content: "Mon";
   display: block;
   font-weight: normal;
 }
 
 /* tuesday */
-.ant-fullcalendar.ant-fullcalendar-full>div>table>thead>
-tr th:nth-child(3)>span{
+.ant-fullcalendar.ant-fullcalendar-full>div>table>thead>tr th:nth-child(3)>span {
   display: none;
 }
-.ant-fullcalendar.ant-fullcalendar-full>div>table>thead>
-tr th:nth-child(3):after{
+
+.ant-fullcalendar.ant-fullcalendar-full>div>table>thead>tr th:nth-child(3):after {
   content: "Tue";
   display: block;
   font-weight: normal;
 }
 
 /* wednesday */
-.ant-fullcalendar.ant-fullcalendar-full>div>table>thead>
-tr th:nth-child(4)>span{
+.ant-fullcalendar.ant-fullcalendar-full>div>table>thead>tr th:nth-child(4)>span {
   display: none;
 }
-.ant-fullcalendar.ant-fullcalendar-full>div>table>thead>
-tr th:nth-child(4):after{
+
+.ant-fullcalendar.ant-fullcalendar-full>div>table>thead>tr th:nth-child(4):after {
   content: "Wed";
   display: block;
   font-weight: normal;
 }
 
 /* thursday */
-.ant-fullcalendar.ant-fullcalendar-full>div>table>thead>
-tr th:nth-child(5)>span{
+.ant-fullcalendar.ant-fullcalendar-full>div>table>thead>tr th:nth-child(5)>span {
   display: none;
 }
-.ant-fullcalendar.ant-fullcalendar-full>div>table>thead>
-tr th:nth-child(5):after{
+
+.ant-fullcalendar.ant-fullcalendar-full>div>table>thead>tr th:nth-child(5):after {
   content: "Thu";
   display: block;
   font-weight: normal;
 }
 
 /* friday */
-.ant-fullcalendar.ant-fullcalendar-full>div>table>thead>
-tr th:nth-child(6)>span{
+.ant-fullcalendar.ant-fullcalendar-full>div>table>thead>tr th:nth-child(6)>span {
   display: none;
 }
-.ant-fullcalendar.ant-fullcalendar-full>div>table>thead>
-tr th:nth-child(6):after{
+
+.ant-fullcalendar.ant-fullcalendar-full>div>table>thead>tr th:nth-child(6):after {
   content: "Fri";
   display: block;
   font-weight: normal;
 }
 
 /* saturday */
-.ant-fullcalendar.ant-fullcalendar-full>div>table>thead>
-tr th:nth-child(7)>span{
+.ant-fullcalendar.ant-fullcalendar-full>div>table>thead>tr th:nth-child(7)>span {
   display: none;
 }
-.ant-fullcalendar.ant-fullcalendar-full>div>table>thead>
-tr th:nth-child(7):after{
+
+.ant-fullcalendar.ant-fullcalendar-full>div>table>thead>tr th:nth-child(7):after {
   content: "Sat";
   display: block;
   font-weight: normal;
+}
+
+.floating-panel {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #f0f0f0;
+  padding: 20px;
+  border-top: 1px solid #ccc;
+  box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+}
+
+.floating-panel.open {
+  max-height: 200px;
+  /* Adjust the max height as needed */
+  overflow: auto;
 }

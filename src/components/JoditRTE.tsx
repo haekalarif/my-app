@@ -1,31 +1,36 @@
-import React, { useState, useRef, useMemo } from 'react';
+import React, { useState, useRef, useMemo, useEffect } from 'react';
 import JoditEditor, { Jodit } from 'jodit-react';
 import { TextField } from '@fluentui/react';
 import { Modal } from 'antd';
 
-const JoditRTE: React.FC<any> = ({ placeholder, disabled }) => {
-    const documentRef = useRef(null);
-    const [content, setContent] = useState("");
+const JoditRTE: React.FC<any> = (props) => {
+    console.log(props);
+    const editorRef: any = useRef();
+
+    const placeholder = props.placeholder;
+    const disabled = props.disabled;
+    const value = props.value;
+    const onChange = props.onChange;
+
+    // const [content, setContent] = useState("");
     const buttons = ['paragraph', 'font', 'fontsize', 'brush', '|', 'bold', 'italic', 'underline', 'strikethrough', '|', 'align', 'ol', 'ul', '|', 'link', 'image'];
     const config: any = useMemo(() => ({
+        placeholder: placeholder ? placeholder : "",
+        toolbar: props.isShowToolbar,
+        disabled: props.disabled,
         readonly: false,
-        toolbar: true,
-        disabled: disabled,
-        placeholder: placeholder || 'Start typings...',
         showXPathInStatusbar: false,
         showCharsCounter: false,
         showWordsCounter: false,
         askBeforePasteHTML: false,
         askBeforePasteFromWord: false,
+        minHeight: 150,
         buttons: buttons,
         buttonsXS: buttons,
         buttonsMD: buttons,
         buttonsSM: buttons,
-        enableDragAndDropFileToEditor: false,
         uploader: {
             insertImageAsBase64URI: true,
-            url: ""
-
         },
         popup: {
             img: false,
@@ -34,9 +39,7 @@ const JoditRTE: React.FC<any> = ({ placeholder, disabled }) => {
             followOnDblClick: false,
             noFollowCheckbox: false,
             openInNewTabCheckbox: false,
-            classNameForm: false
         },
-        colorPickerDefaultTab: "text",
         controls: {
             font: {
                 list: Jodit.atom({
@@ -54,29 +57,25 @@ const JoditRTE: React.FC<any> = ({ placeholder, disabled }) => {
                     square: 'Square'
                 })
             },
-
         },
-        minHeight: 150,
-        // tabIndex: 1,
-        // onFocus: true
-    }), []);
+        colorPickerDefaultTab: "text",
+    }), [disabled]);
 
     return (
-        <div>
-            <JoditEditor
-                ref={documentRef}
-                value={content}
-                config={config}
-                // onBlur={onBlurEditor} // preferred to use only this option to update the content for performance reasons
-                onChange={(newContent) => {
-                    console.log(newContent);
-                    if (newContent && (newContent !== '<p><br></p>')) setContent(newContent);
-                    // else setContent("")
-
-                }}
-
-            />
-        </div>
+        // <div>
+        <JoditEditor
+            ref={editorRef}
+            value={value}
+            config={config}
+            // onBlur={onBlurEditor} // preferred to use only this option to update the content for performance reasons
+            onChange={onChange}
+            onBlur={newContent => {
+                console.log("on Blur")
+                console.log(editorRef)
+                editorRef?.current?.input?.focus()
+            }}
+        />
+        // </div>
     );
 };
 

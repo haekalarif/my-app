@@ -1,6 +1,8 @@
 import axios from "axios";
-import moment from "moment";
+import moment, { Moment } from "moment";
 import React, { useEffect } from "react";
+
+
 
 const SlaCalculate: React.FC = (props) => {
     function alertNotificationBase(alertNotification) {
@@ -15,11 +17,11 @@ const SlaCalculate: React.FC = (props) => {
             "serviceLevelAgreement": {
                 "slaWeek": alertNotification?.serviceLevelAgreement?.slaWeek ? alertNotification?.serviceLevelAgreement?.slaWeek : "",
                 "slaStartTime": {
-                    "hours": alertNotification?.serviceLevelAgreement?.slaStartTime?.hours ? alertNotification?.serviceLevelAgreement?.slaStartTime?.hours : 9 + (Math.round(new Date().getTimezoneOffset() / 60)),
+                    "hours": alertNotification?.serviceLevelAgreement?.slaStartTime?.hours ? alertNotification?.serviceLevelAgreement?.slaStartTime?.hours : 2,
                     "minutes": alertNotification?.serviceLevelAgreement?.slaStartTime?.minutes ? alertNotification?.serviceLevelAgreement?.slaStartTime?.minutes : 0,
                 },
                 "slaEndTime": {
-                    "hours": alertNotification?.serviceLevelAgreement?.slaEndTime?.hours ? alertNotification?.serviceLevelAgreement?.slaEndTime?.hours : 17 + (Math.round(new Date().getTimezoneOffset() / 60)),
+                    "hours": alertNotification?.serviceLevelAgreement?.slaEndTime?.hours ? alertNotification?.serviceLevelAgreement?.slaEndTime?.hours : 10,
                     "minutes": alertNotification?.serviceLevelAgreement?.slaEndTime?.minutes ? alertNotification?.serviceLevelAgreement?.slaEndTime?.minutes : 0
                 },
                 "isBreachesFirstResponseTime": alertNotification?.serviceLevelAgreement?.isBreachesFirstResponseTime ? alertNotification?.serviceLevelAgreement?.isBreachesFirstResponseTime : false,
@@ -109,17 +111,17 @@ const SlaCalculate: React.FC = (props) => {
 
 
         let now = new Date();
-        const createdDate = new Date(createdDateTime);
-        const workingHour: number = alertNotification.serviceLevelAgreement.slaEndTime.hours - alertNotification.serviceLevelAgreement.slaStartTime.hours;
+        // const createdDate = new Date(createdDateTime);
+        // const workingHour: number = alertNotification.serviceLevelAgreement.slaEndTime.hours - alertNotification.serviceLevelAgreement.slaStartTime.hours;
 
         // Calculate limit first response time
-        let deadline: Date;
+        let deadline: Moment;
 
         if (alertNotificationSla.isUrgent) {
             if (alertNotificationSla.urgentTime.includes("days")) {
-                deadline = calculateLimitDays(createdDateTime, alertNotification, alertNotificationSla.urgentDuration)
+                deadline = setLimitDateDays(createdDateTime, alertNotification, alertNotificationSla.urgentDuration)
             } else {
-                deadline = calculateLimitHours(createdDateTime, alertNotification, alertNotificationSla.urgentDuration)
+                deadline = setLimitDateHrs(createdDateTime, alertNotification, alertNotificationSla.urgentDuration)
             }
         }
 
@@ -144,23 +146,23 @@ const SlaCalculate: React.FC = (props) => {
             console.log("deadline", deadline)
             console.log("now", now)
             // now = new Date("2023-09-07T11:26:31.440Z")
-            if (now < deadline) {
-                // const dur: number = durationControl(now, deadline, alertNotification);
-                const dur: number = Math.round((deadline.getTime() - now.getTime()) / (1000 * 60));
-                console.log("duration", dur);
-                result = {
-                    text: `${shortenDuration(dur, 24)}`,
-                    backgroundColor: dur > 60 ? slaBlue : slaOrange,
-                }
-            } else {
-                console.log("created date", createdDate);
-                console.log("now", now)
-                const dur: number = durationControl(createdDate, now, alertNotification);
-                result = {
-                    text: `${shortenDuration(dur, workingHour)}`,
-                    backgroundColor: slaRed,
-                }
-            }
+            // if (now < deadline) {
+            //     // const dur: number = durationControl(now, deadline, alertNotification);
+            //     const dur: number = Math.round((deadline.getTime() - now.getTime()) / (1000 * 60));
+            //     console.log("duration", dur);
+            //     result = {
+            //         text: `${shortenDuration(dur, 24)}`,
+            //         backgroundColor: dur > 60 ? slaBlue : slaOrange,
+            //     }
+            // } else {
+            //     console.log("created date", createdDate);
+            //     console.log("now", now)
+            //     const dur: number = durationControl(createdDate, now, alertNotification);
+            //     result = {
+            //         text: `${shortenDuration(dur, workingHour)}`,
+            //         backgroundColor: slaRed,
+            //     }
+            // }
             // }
         } else {
             // if (ticket.timeResolution) {
@@ -198,224 +200,229 @@ const SlaCalculate: React.FC = (props) => {
         return result;
 
     }
-    function isMoreThanEndTime(slaHour, newLimit, startTime, remainingTime, week) {
+    function isMoreThanEndTime
+        (
+            slaHour: number,
+            limitDate: moment.Moment,
+            startTime: { hour: number, minutes: number },
+            hourSpent: number,
+            week: string
+        ) {
+        let newLimitDate = moment(limitDate);
 
         while (slaHour > 0) {
-            // plus one day then the initial hours of work are determined based on sla hours, then added with the remainder of the sla per priority hours - hours worked in a day
-            newLimit.setDate(newLimit.getDate() + 1);//tomorrow
-            newLimit.setHours(startTime.hour, startTime.minutes);//9
-            newLimit.setHours(newLimit.getHours() + (slaHour - remainingTime));//11
-            // newLimit.setHours(newLimit.getHours() + remainingTime);//11
+            newLimitDate.add(1, 'days');
+            newLimitDate.hours(startTime.hour).minutes(startTime.minutes);
+            newLimitDate.add((slaHour - hourSpent), 'hours');
 
-            // create a new object to calculate the remaining working hours but start the working hours based on the beginning of the working hours sla
-            let start = new Date(new Date(newLimit).setHours(startTime.hour, startTime.minutes));
-            let end = newLimit;
-            let remain = Math.ceil((end.getTime() - start.getTime()) / (1000 * 3600));
-            // console.log("remain", remain);
-            // then sla hours = sla hours - (remaining working hours in a day + remaining working hours)
-            // and remaining time = remaining working hours
-            slaHour = slaHour - (remainingTime + remain);
-            remainingTime = remain;
+            let helperDate = newLimitDate.clone();
+            helperDate.hours(startTime.hour).minutes(startTime.minutes);
+
+            let remain = newLimitDate.diff(helperDate, 'hours');
+
+            slaHour = slaHour - (hourSpent + remain);
+            hourSpent = remain;
+
             // if weekdays only
             if (week.includes('weekdays')) {
-                if (newLimit.getDay() == 6 || newLimit.getDay() == 0) {
-                    while (newLimit.getDay() == 6 || newLimit.getDay() == 0) {
-                        newLimit.setDate(newLimit.getDate() + 1);
-                    }
+                while (newLimitDate.days() == 6 || newLimitDate.days() == 0) {
+                    newLimitDate.add(1, 'days');
                 }
             }
-        }
 
-        return newLimit;
+        }
+        return newLimitDate;
     }
-    function calculateLimitHours(ticketCreatedDate: Date, alertNotification, durations: number): Date {
 
-        const week = alertNotification.serviceLevelAgreement.slaWeek;
-        let slaHour = durations;
-        let startTime = {
-            "hour": hourUTCToLocal(alertNotification.serviceLevelAgreement.slaStartTime.hours),
-            "minutes": alertNotification.serviceLevelAgreement.slaStartTime.minutes
-        }
-        let endTime = {
-            "hour": hourUTCToLocal(alertNotification.serviceLevelAgreement.slaEndTime.hours),
-            "minutes": alertNotification.serviceLevelAgreement.slaEndTime.minutes
-        }
+    // function calculateLimitHours(ticketCreatedDate: Date, alertNotification, durations: number, timezoneOffset): Date {
 
-        // Use setLimitDateDays if slaHour is more than the number of working hour in a day
-        // console.log("ticket created date sebelum di initiate", ticketCreatedDate);
-        let newLimit: Date = new Date(ticketCreatedDate);
-        // console.log("ticket created date sesudah di initiate", newLimit);
-        // console.log("ticket created date get hour", newLimit.getHours());
-        const workingHour = endTime.hour - startTime.hour; // number of working hour
-        // console.log("ticket created date time", newLimit.toISOString());
-        // console.log("working hour", workingHour);
-        // console.log("sla hour duration", slaHour);
-        if (slaHour > workingHour) {
-            const daysCount: number = Math.floor(slaHour / workingHour);
+    //     const week = alertNotification.serviceLevelAgreement.slaWeek;
+    //     let slaHour = durations;
+    //     let startTime = {
+    //         "hour": hourUTCToLocal(alertNotification.serviceLevelAgreement.slaStartTime.hours, timezoneOffset),
+    //         "minutes": alertNotification.serviceLevelAgreement.slaStartTime.minutes
+    //     }
+    //     let endTime = {
+    //         "hour": hourUTCToLocal(alertNotification.serviceLevelAgreement.slaEndTime.hours, timezoneOffset),
+    //         "minutes": alertNotification.serviceLevelAgreement.slaEndTime.minutes
+    //     }
 
-            newLimit = calculateLimitDays(newLimit, alertNotification, daysCount);
-            slaHour = slaHour - (daysCount * workingHour);
-        }
+    //     // Use setLimitDateDays if slaHour is more than the number of working hour in a day
+    //     // console.log("ticket created date sebelum di initiate", ticketCreatedDate);
+    //     let newLimit: Date = new Date(ticketCreatedDate);
+    //     // console.log("ticket created date sesudah di initiate", newLimit);
+    //     // console.log("ticket created date get hour", newLimit.getHours());
+    //     const workingHour = endTime.hour - startTime.hour; // number of working hour
+    //     // console.log("ticket created date time", newLimit.toISOString());
+    //     // console.log("working hour", workingHour);
+    //     // console.log("sla hour duration", slaHour);
+    //     if (slaHour > workingHour) {
+    //         const daysCount: number = Math.floor(slaHour / workingHour);
 
-        // this is ticket created date
-        // this is ticket created date + sla hours per priority
-        // this is remaining hour ticket from ticket created - limit hour sla
-        let limitEndTimeWorkHour: Date = new Date(new Date(newLimit).setHours(endTime.hour, endTime.minutes));
-        let remainingTime = Math.ceil((limitEndTimeWorkHour.getTime() - newLimit.getTime()) / (1000 * 3600));
+    //         newLimit = calculateLimitDays(newLimit, alertNotification, daysCount, timezoneOffset !== undefined ? timezoneOffset : undefined);
+    //         slaHour = slaHour - (daysCount * workingHour);
+    //     }
 
-        // console.log("limit end time work hour", limitEndTimeWorkHour.toISOString());
-        // console.log("Remaining Time", remainingTime);
+    //     // this is ticket created date
+    //     // this is ticket created date + sla hours per priority
+    //     // this is remaining hour ticket from ticket created - limit hour sla
+    //     let limitEndTimeWorkHour: Date = new Date(new Date(newLimit).setHours(endTime.hour, endTime.minutes));
+    //     let remainingTime = Math.ceil((limitEndTimeWorkHour.getTime() - newLimit.getTime()) / (1000 * 3600));
 
-        // if the ticket is made on a holiday which the sla arrangement is only on weekdays Monday - Friday
+    //     // console.log("limit end time work hour", limitEndTimeWorkHour.toISOString());
+    //     // console.log("Remaining Time", remainingTime);
+
+    //     // if the ticket is made on a holiday which the sla arrangement is only on weekdays Monday - Friday
+    //     if (week.includes('weekdays')) {
+    //         if (newLimit.getDay() == 6 || newLimit.getDay() == 0) {
+    //             while (newLimit.getDay() == 6 || newLimit.getDay() == 0) {
+    //                 newLimit.setDate(newLimit.getDate() + 1);
+    //             }
+    //         }
+    //     }
+    //     console.log("new limit", newLimit);
+    //     // console.log("new limit get hour", newLimit.getHours());
+    //     // console.log("new limit hour", hourLocalToUTC(newLimit.getHours()));
+    //     // console.log("start time hour", startTime.hour);
+    //     // console.log("end time hour", endTime.hour);
+    //     // if ticket created before start time working hour
+    //     if (newLimit.getHours() < startTime.hour) {
+
+    //         // ticket working hours start from working hours sla, then added working hours with SLA limits per priority (First response time / Resolution time)
+    //         newLimit.setHours(startTime.hour, startTime.minutes);
+    //         // newLimit.setHours(newLimit.getHours() + slaHour);
+    //         newLimit.setHours(newLimit.getHours() + slaHour);
+
+    //         // if the limit of working hours per priority > end of working hours sla
+    //         // if (newLimit > limitEndTimeWorkHour) {
+    //         limitEndTimeWorkHour.setDate(newLimit.getDate());
+    //         limitEndTimeWorkHour.setMonth(newLimit.getMonth());
+    //         limitEndTimeWorkHour.setFullYear(newLimit.getFullYear());
+    //         if (newLimit > limitEndTimeWorkHour) {
+    //             isMoreThanEndTime(slaHour, newLimit, startTime, remainingTime, week);
+    //         }
+    //         // if ticket created after end time working hour
+    //     } else if (newLimit.getHours() > endTime.hour) {
+
+    //         console.log("new Limit before result", newLimit);
+    //         // console.log("new Limit getDate", newLimit.getDate());
+    //         newLimit.setDate(newLimit.getDate() + 1);
+    //         newLimit.setHours(startTime.hour, startTime.minutes);
+    //         console.log("new Limit after", newLimit);
+    //         // console.log("new Limit", newLimit.toISOString());
+    //         // console.log("new Limit getHours", newLimit.getHours());
+    //         // console.log(convertIndonesiaHourToUTCHour(newLimit.getHours()))
+    //         // console.log(hourLocalToUTC(newLimit.getHours()))
+    //         // console.log("sla hour duration", hourLocalToUTC(newLimit.getHours()) + slaHour);
+    //         newLimit.setHours(newLimit.getHours() + slaHour);
+
+    //         // console.log("new Limit result", newLimit.toISOString());
+    //         console.log("new Limit result", newLimit);
+
+    //         limitEndTimeWorkHour.setDate(newLimit.getDate());
+    //         limitEndTimeWorkHour.setMonth(newLimit.getMonth());
+    //         limitEndTimeWorkHour.setFullYear(newLimit.getFullYear());
+    //         console.log("limit end time work hour result", limitEndTimeWorkHour);
+
+    //         isDayWeekdays(week, newLimit);
+    //         isDayWeekdays(week, limitEndTimeWorkHour);
+    //         // if (newLimit > limitEndTimeWorkHour) {
+    //         if (newLimit > limitEndTimeWorkHour) {
+    //             isMoreThanEndTime(slaHour, newLimit, startTime, remainingTime, week);
+    //         }
+    //         // if ticket created after on time working hour
+    //     } else {
+    //         // console.log("new Limit before result", newLimit.toISOString());
+    //         // console.log("new Limit getHour", newLimit.getHours());
+    //         // console.log("new Limit getHourUTC", (hourLocalToUTC(newLimit.getHours()) + slaHour));
+    //         newLimit.setHours(newLimit.getHours() + slaHour); //18
+    //         console.log("new Limit result", newLimit);
+    //         // console.log("new Limit result", newLimit.toISOString());
+
+    //         limitEndTimeWorkHour.setDate(newLimit.getDate());
+    //         limitEndTimeWorkHour.setMonth(newLimit.getMonth());
+    //         limitEndTimeWorkHour.setFullYear(newLimit.getFullYear());
+    //         console.log("limit end time work hour result", limitEndTimeWorkHour);
+    //         // if (newLimit > limitEndTimeWorkHour) {
+    //         // console.log(convertIndonesiaToUTC(newLimit))
+    //         // console.log(convertIndonesiaToUTC(limitEndTimeWorkHour))
+    //         // if (newLimit > limitEndTimeWorkHour) {
+    //         if (newLimit > limitEndTimeWorkHour) {
+    //             isMoreThanEndTime(slaHour, newLimit, startTime, remainingTime, week);
+    //         }
+    //     }
+
+    //     return newLimit;
+    // }
+    // function calculateLimitDays(ticketCreatedDate: Date, alertNotification, durations: number, timezoneOffset): Date {
+
+    //     const week = alertNotification.serviceLevelAgreement.slaWeek;
+    //     const ticketCreated = new Date(ticketCreatedDate);
+
+    //     let startTime = {
+    //         "hour": alertNotification.serviceLevelAgreement.slaStartTime.hours,
+    //         "minutes": alertNotification.serviceLevelAgreement.slaStartTime.minutes
+    //     }
+    //     let endTime = {
+    //         "hour": alertNotification.serviceLevelAgreement.slaEndTime.hours,
+    //         "minutes": alertNotification.serviceLevelAgreement.slaEndTime.minutes
+    //     }
+
+    //     let newLimit = new Date(ticketCreatedDate);
+
+    //     // check if sla type weekdays only
+    //     if (week.includes('weekdays')) {
+    //         if (ticketCreated.getDay() == 6 || ticketCreated.getDay() == 0) {
+    //             while (newLimit.getDay() == 6 || newLimit.getDay() == 0) {
+    //                 newLimit.setDate(newLimit.getDate() + 1);
+    //             }
+    //         }
+    //     }
+
+    //     if (newLimit.getHours() < startTime.hour) {
+
+    //         newLimit.setHours(startTime.hour, startTime.minutes);
+    //         newLimit.setDate(newLimit.getDate() + durations);
+
+    //         // check if sla type weekdays only
+    //         isDayWeekdays(week, newLimit);
+    //         // if(week.includes('weekdays')){
+    //         //   while(newLimit.getDay() == 6 || newLimit.getDay() == 0){
+    //         //     newLimit.setDate(newLimit.getDate() + 1);
+    //         //   }
+    //         // }
+
+    //     } else if (newLimit.getHours() > endTime.hour) {
+
+    //         newLimit.setHours(startTime.hour, startTime.minutes);
+    //         newLimit.setDate(newLimit.getDate() + 1);
+
+    //         // check if sla type weekdays only
+    //         isDayWeekdays(week, newLimit);
+    //         newLimit.setDate(newLimit.getDate() + durations);
+    //         // check if sla type weekdays only
+    //         isDayWeekdays(week, newLimit);
+
+
+    //     } else {
+    //         // newLimit.setHours(startTime.hour, startTime.minutes);
+    //         newLimit.setDate(newLimit.getDate() + durations);
+    //         // check if sla type weekdays only
+    //         isDayWeekdays(week, newLimit);
+    //     }
+
+    //     return newLimit;
+    // }
+    function isDayWeekdays(week: string, newLimit: moment.Moment) {
         if (week.includes('weekdays')) {
-            if (newLimit.getDay() == 6 || newLimit.getDay() == 0) {
-                while (newLimit.getDay() == 6 || newLimit.getDay() == 0) {
-                    newLimit.setDate(newLimit.getDate() + 1);
-                }
-            }
-        }
-        console.log("new limit", newLimit);
-        // console.log("new limit get hour", newLimit.getHours());
-        // console.log("new limit hour", hourLocalToUTC(newLimit.getHours()));
-        // console.log("start time hour", startTime.hour);
-        // console.log("end time hour", endTime.hour);
-        // if ticket created before start time working hour
-        if (newLimit.getHours() < startTime.hour) {
-
-            // ticket working hours start from working hours sla, then added working hours with SLA limits per priority (First response time / Resolution time)
-            newLimit.setHours(startTime.hour, startTime.minutes);
-            // newLimit.setHours(newLimit.getHours() + slaHour);
-            newLimit.setHours(newLimit.getHours() + slaHour);
-
-            // if the limit of working hours per priority > end of working hours sla
-            // if (newLimit > limitEndTimeWorkHour) {
-            limitEndTimeWorkHour.setDate(newLimit.getDate());
-            limitEndTimeWorkHour.setMonth(newLimit.getMonth());
-            limitEndTimeWorkHour.setFullYear(newLimit.getFullYear());
-            if (newLimit > limitEndTimeWorkHour) {
-                isMoreThanEndTime(slaHour, newLimit, startTime, remainingTime, week);
-            }
-            // if ticket created after end time working hour
-        } else if (newLimit.getHours() > endTime.hour) {
-
-            console.log("new Limit before result", newLimit);
-            // console.log("new Limit getDate", newLimit.getDate());
-            newLimit.setDate(newLimit.getDate() + 1);
-            newLimit.setHours(startTime.hour, startTime.minutes);
-            console.log("new Limit after", newLimit);
-            // console.log("new Limit", newLimit.toISOString());
-            // console.log("new Limit getHours", newLimit.getHours());
-            // console.log(convertIndonesiaHourToUTCHour(newLimit.getHours()))
-            // console.log(hourLocalToUTC(newLimit.getHours()))
-            // console.log("sla hour duration", hourLocalToUTC(newLimit.getHours()) + slaHour);
-            newLimit.setHours(newLimit.getHours() + slaHour);
-
-            // console.log("new Limit result", newLimit.toISOString());
-            console.log("new Limit result", newLimit);
-
-            limitEndTimeWorkHour.setDate(newLimit.getDate());
-            limitEndTimeWorkHour.setMonth(newLimit.getMonth());
-            limitEndTimeWorkHour.setFullYear(newLimit.getFullYear());
-            console.log("limit end time work hour result", limitEndTimeWorkHour);
-
-            isDayWeekdays(week, newLimit);
-            isDayWeekdays(week, limitEndTimeWorkHour);
-            // if (newLimit > limitEndTimeWorkHour) {
-            if (newLimit > limitEndTimeWorkHour) {
-                isMoreThanEndTime(slaHour, newLimit, startTime, remainingTime, week);
-            }
-            // if ticket created after on time working hour
-        } else {
-            // console.log("new Limit before result", newLimit.toISOString());
-            // console.log("new Limit getHour", newLimit.getHours());
-            // console.log("new Limit getHourUTC", (hourLocalToUTC(newLimit.getHours()) + slaHour));
-            newLimit.setHours(newLimit.getHours() + slaHour); //18
-            console.log("new Limit result", newLimit);
-            // console.log("new Limit result", newLimit.toISOString());
-
-            limitEndTimeWorkHour.setDate(newLimit.getDate());
-            limitEndTimeWorkHour.setMonth(newLimit.getMonth());
-            limitEndTimeWorkHour.setFullYear(newLimit.getFullYear());
-            console.log("limit end time work hour result", limitEndTimeWorkHour);
-            // if (newLimit > limitEndTimeWorkHour) {
-            // console.log(convertIndonesiaToUTC(newLimit))
-            // console.log(convertIndonesiaToUTC(limitEndTimeWorkHour))
-            // if (newLimit > limitEndTimeWorkHour) {
-            if (newLimit > limitEndTimeWorkHour) {
-                isMoreThanEndTime(slaHour, newLimit, startTime, remainingTime, week);
+            while (newLimit.days() == 6 || newLimit.days() == 0) {
+                newLimit.add(1, 'days');
             }
         }
 
         return newLimit;
     }
-    function calculateLimitDays(ticketCreatedDate: Date, alertNotification, durations: number): Date {
 
-        const week = alertNotification.serviceLevelAgreement.slaWeek;
-        const ticketCreated = new Date(ticketCreatedDate);
-
-        let startTime = {
-            "hour": alertNotification.serviceLevelAgreement.slaStartTime.hours,
-            "minutes": alertNotification.serviceLevelAgreement.slaStartTime.minutes
-        }
-        let endTime = {
-            "hour": alertNotification.serviceLevelAgreement.slaEndTime.hours,
-            "minutes": alertNotification.serviceLevelAgreement.slaEndTime.minutes
-        }
-
-        let newLimit = new Date(ticketCreatedDate);
-
-        // check if sla type weekdays only
-        if (week.includes('weekdays')) {
-            if (ticketCreated.getDay() == 6 || ticketCreated.getDay() == 0) {
-                while (newLimit.getDay() == 6 || newLimit.getDay() == 0) {
-                    newLimit.setDate(newLimit.getDate() + 1);
-                }
-            }
-        }
-
-        if (newLimit.getHours() < startTime.hour) {
-
-            newLimit.setHours(startTime.hour, startTime.minutes);
-            newLimit.setDate(newLimit.getDate() + durations);
-
-            // check if sla type weekdays only
-            isDayWeekdays(week, newLimit);
-            // if(week.includes('weekdays')){
-            //   while(newLimit.getDay() == 6 || newLimit.getDay() == 0){
-            //     newLimit.setDate(newLimit.getDate() + 1);
-            //   }
-            // }
-
-        } else if (newLimit.getHours() > endTime.hour) {
-
-            newLimit.setHours(startTime.hour, startTime.minutes);
-            newLimit.setDate(newLimit.getDate() + 1);
-
-            // check if sla type weekdays only
-            isDayWeekdays(week, newLimit);
-            newLimit.setDate(newLimit.getDate() + durations);
-            // check if sla type weekdays only
-            isDayWeekdays(week, newLimit);
-
-
-        } else {
-            // newLimit.setHours(startTime.hour, startTime.minutes);
-            newLimit.setDate(newLimit.getDate() + durations);
-            // check if sla type weekdays only
-            isDayWeekdays(week, newLimit);
-        }
-
-        return newLimit;
-    }
-    function isDayWeekdays(week: string, newLimit: Date) {
-        if (week.includes('weekdays')) {
-            while (newLimit.getDay() == 6 || newLimit.getDay() == 0) {
-                newLimit.setDate(newLimit.getDate() + 1);
-            }
-        }
-
-        return newLimit;
-    }
     function durationControl(startDate: Date, endDate: Date, alertNotification) {
         const workingDays = alertNotification.serviceLevelAgreement.slaWeek;
         // const slaStartTime = hourUTCToLocal(alertNotification.serviceLevelAgreement.slaStartTime.hours), alertNotification.serviceLevelAgreement.slaStartTime.minutes));
@@ -501,9 +508,9 @@ const SlaCalculate: React.FC = (props) => {
         console.log(lifeTimeTicket);
         return lifeTimeTicket;
     }
-    function hourUTCToLocal(hour) {
+    function hourUTCToLocal(hour, timezoneOffset?: number) {
         let now = new Date();
-        let resultHour = hour - (now.getTimezoneOffset() / 60);
+        let resultHour = hour - (timezoneOffset / 60);
 
         return resultHour;
     }
@@ -527,11 +534,11 @@ const SlaCalculate: React.FC = (props) => {
         "serviceLevelAgreement": {
             "slaWeek": "1_weekdays",
             "slaStartTime": {
-                "hours": 1,
+                "hours": 2,
                 "minutes": 0
             },
             "slaEndTime": {
-                "hours": 11,
+                "hours": 12,
                 "minutes": 0
             },
             "isBreachesFirstResponseTime": true,
@@ -546,8 +553,7 @@ const SlaCalculate: React.FC = (props) => {
                 }
             ],
             "isFrtUrgent": true,
-            // "frtUrgentDuration": 1,
-            "frtUrgentDuration": 24,
+            "frtUrgentDuration": 1,
             "frtUrgentTime": "2_hours",
             "isFrtImportant": false,
             "frtImportantDuration": 1,
@@ -570,7 +576,7 @@ const SlaCalculate: React.FC = (props) => {
                 }
             ],
             "isRtUrgent": true,
-            "rtUrgentDuration": 3,
+            "rtUrgentDuration": 1,
             "rtUrgentTime": "2_hours",
             "isRtImportant": false,
             "rtImportantDuration": 1,
@@ -584,14 +590,253 @@ const SlaCalculate: React.FC = (props) => {
         }
     }
 
+
+    function setLimitDateHrs(createdDateTime: string, alertNotification: any, durations) {
+        const week = alertNotification.serviceLevelAgreement.slaWeek;
+        const startTime = {
+            "hour": alertNotification.serviceLevelAgreement.slaStartTime.hours,
+            "minutes": alertNotification.serviceLevelAgreement.slaStartTime.minutes
+        }
+        let endTime = {
+            "hour": alertNotification.serviceLevelAgreement.slaEndTime.hours,
+            "minutes": alertNotification.serviceLevelAgreement.slaEndTime.minutes
+        }
+        const workingHour = endTime.hour - startTime.hour; // number of working hour
+
+        let limitDate = moment(createdDateTime);
+        console.log("limit date 1", limitDate);
+        let slaHour = durations;
+
+        // console.log("limit date before operation (hours)", limitDate);
+
+        // Use setLimitDateDays if slaHour is more than the number of working hour in a day
+        if (slaHour > workingHour) {
+            const daysCount: number = Math.floor(slaHour / workingHour);
+
+            limitDate = setLimitDateDays(createdDateTime, alertNotification, daysCount);
+            slaHour = slaHour - (daysCount * workingHour);
+        }
+        console.log("limit date 2", limitDate);
+
+        // if the ticket is made on a holiday which the sla arrangement is only on weekdays Monday - Friday
+        if (week.includes('weekdays')) {
+            while (limitDate.days() == 6 || limitDate.days() == 0) {
+                limitDate.add(1, 'days');
+            }
+        }
+        console.log("limit date 3", limitDate);
+        // helperDate value is the same as limitDate at the start
+        let workingHourEndTime = moment(limitDate);
+        workingHourEndTime.hours(endTime.hour).minutes(endTime.minutes);
+
+        console.log("Working Hour Start Time")
+        console.log(moment(limitDate).hours(startTime.hour).minutes(startTime.minutes));
+        console.log("");
+
+        console.log("Working Hour End Time")
+        console.log(workingHourEndTime);
+        console.log("");
+
+        let hourSpent = workingHourEndTime.diff(limitDate, 'hours');
+
+        console.log("Different hour created ticket & working end time");
+        console.log(hourSpent);
+        console.log("");
+
+        console.log("Created Date Time Ticket")
+        console.log(limitDate);
+        console.log("");
+
+        // if ticket created before working hour
+        if (limitDate.hours() < startTime.hour) {
+            console.log("Case 1")
+            // ticket working hours start from working hours sla, then added working hours with SLA limits per priority (First response time / Resolution time)
+            console.log("limit date")
+            console.log(limitDate);
+            limitDate.hours(startTime.hour).minutes(startTime.minutes);
+            console.log(limitDate);
+            limitDate.add(slaHour, 'hours');
+            console.log(limitDate);
+
+            // if the limit of working hours > working hours
+            if (limitDate.isAfter(workingHourEndTime)) {
+                limitDate = isMoreThanEndTime(slaHour, limitDate, startTime, hourSpent, week);
+                console.log(limitDate);
+            }
+
+            // if ticket created after end time working hour
+        } else if (limitDate.hours() > endTime.hour) {
+            console.log("Case 2")
+            console.log("limit date")
+            console.log(limitDate);
+            limitDate.add(1, 'days');
+            console.log(limitDate);
+            limitDate.hours(startTime.hour).minutes(startTime.minutes);
+            console.log(limitDate);
+            limitDate.add(slaHour, 'hours');
+            console.log(limitDate);
+
+            if (limitDate.isAfter(workingHourEndTime)) {
+                limitDate = isMoreThanEndTime(slaHour, limitDate, startTime, hourSpent, week);
+                console.log(limitDate);
+            }
+            // if ticket created after on time working hour
+        } else {
+            console.log("Case 3")
+            console.log("limit date")
+            console.log(limitDate);
+            limitDate.add(slaHour, 'hours');
+            console.log(limitDate);
+
+            if (limitDate.isAfter(workingHourEndTime)) {
+                limitDate = isMoreThanEndTime(slaHour, limitDate, startTime, hourSpent, week);
+                console.log(limitDate);
+            }
+
+            console.log("Created Date Time after Start time working hour")
+            console.log(limitDate);
+            console.log("");
+        }
+
+        // context.log("limit date after operation (hours)", limitDate);
+        return limitDate;
+    }
+
+    function setLimitDateDays(createdDateTime: string, alertNotification: any, durations) {
+        const week = alertNotification.serviceLevelAgreement.slaWeek;
+        // const ticketCreated = new Date(ticketCreatedDate);
+        let limitDate = moment(createdDateTime);
+        console.log("limit date 1", limitDate);
+
+        let startTime = {
+            "hour": alertNotification.serviceLevelAgreement.slaStartTime.hours,
+            "minutes": alertNotification.serviceLevelAgreement.slaStartTime.minutes
+        }
+        let endTime = {
+            "hour": alertNotification.serviceLevelAgreement.slaEndTime.hours,
+            "minutes": alertNotification.serviceLevelAgreement.slaEndTime.minutes
+        }
+
+        // check if sla type weekdays only
+        if (week.includes('weekdays')) {
+            while (limitDate.days() == 6 || limitDate.days() == 0) {
+                limitDate.add(1, 'days');
+            }
+        }
+        console.log("limit date 2", limitDate);
+
+        if (limitDate.hours() < startTime.hour) {
+            console.log("Case 1");
+            console.log("limit date")
+            console.log(limitDate);
+            limitDate.hours(startTime.hour).minutes(startTime.minutes);
+            console.log(limitDate);
+            limitDate.add(1, 'days');
+            console.log(limitDate);
+
+            // check if sla type weekdays only
+            isDayWeekdays(week, limitDate);
+            console.log(limitDate);
+            // if(week.includes('weekdays')){
+            //   while(limitDate.getDay() == 6 || limitDate.getDay() == 0){
+            //     limitDate.setDate(limitDate.getDate() + 1);
+            //   }
+            // }
+
+        } else if (limitDate.hours() > endTime.hour) {
+            console.log("Case 2");
+            console.log("limit date")
+            console.log(limitDate);
+            limitDate.hours(startTime.hour).minutes(startTime.minutes);
+            console.log(limitDate);
+            limitDate.add(1, 'days');
+            console.log(limitDate);
+
+            // check if sla type weekdays only
+            isDayWeekdays(week, limitDate);
+            console.log(limitDate);
+            limitDate.add(durations, 'days');
+            console.log(limitDate);
+            // check if sla type weekdays only
+            isDayWeekdays(week, limitDate);
+            console.log(limitDate);
+
+
+        } else {
+            console.log("Case 3");
+            console.log("limit date")
+            console.log(limitDate);
+            // limitDate.setHours(startTime.hour, startTime.minutes);
+            limitDate.add(durations, 'days');
+            console.log(limitDate);
+            // check if sla type weekdays only
+            isDayWeekdays(week, limitDate);
+            console.log(limitDate);
+        }
+
+        // console.log("limit date after operation (days)", limitDate);
+        return limitDate;
+    }
+
     useEffect(() => {
         // 2023-08-31T11:20:36.108Z
         // 2023-08-28T10:43:33.963Z
         // 2023-08-28T06:00:00.963Z
 
         // 2023-08-29T02:02:32.218Z
-        const result = slaInfoControl('2023-09-07T11:26:31.282Z', alertNotification, 'frt')
-        console.log(result)
+        // const result = slaInfoControl('2023-09-07T11:26:31.282Z', alertNotification, 'frt')
+        // console.log(result)
+        // let timezoneOffset = -420
+        // let now = new Date();
+        // if (timezoneOffset) now.setHours(hourUTCToLocal(now.getHours(), timezoneOffset));
+        // console.log(now);
+        const alertNotification = {
+            expectedDate: {
+                isDueInNotifOn: true,
+                dueInNotifDays: 1,
+                isDueTodayNotifOn: true,
+                isOverdueNotifOn: true,
+                overdueNotifDays: 7
+            },
+            serviceLevelAgreement: {
+                slaWeek: '1_weekdays',
+                slaStartTime: { hours: -1, minutes: 0 },
+                slaEndTime: { hours: 14, minutes: 0 },
+                isBreachesFirstResponseTime: true,
+                breachesHoursFirstResponseTime: 0,
+                breachesAssigneeFirstResponseTime: [[Object]],
+                isFrtUrgent: true,
+                frtUrgentDuration: 1,
+                frtUrgentTime: '2_hours',
+                isFrtImportant: true,
+                frtImportantDuration: 4,
+                frtImportantTime: '2_hours',
+                isFrtMedium: true,
+                frtMediumDuration: 2,
+                frtMediumTime: '1_days',
+                isFrtLow: true,
+                frtLowDuration: 24,
+                frtLowTime: '2_hours',
+                isBreachesResolutionTime: true,
+                breachesHoursResolutionTime: 2,
+                breachesAssigneeResolutionTime: [[Object]],
+                isRtUrgent: true,
+                rtUrgentDuration: 3,
+                rtUrgentTime: '2_hours',
+                isRtImportant: true,
+                rtImportantDuration: 1,
+                rtImportantTime: '2_hours',
+                isRtMedium: true,
+                rtMediumDuration: 20,
+                rtMediumTime: '2_hours',
+                isRtLow: true,
+                rtLowDuration: 1,
+                rtLowTime: '2_hours'
+            }
+        }
+        const createdDateTime = new Date("2023-12-28T03:29:49.077Z");
+        const slaInfo = slaInfoControl(createdDateTime, alertNotification, "frt");
+        console.log(slaInfo);
     }, []);
     return (<div></div>)
 }

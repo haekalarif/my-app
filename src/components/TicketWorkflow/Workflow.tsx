@@ -186,7 +186,7 @@ export const activeItem: ICase = {
             nextSteps: [
                 {
                     targetId: "Resolved",
-                    transitionIcon: "CheckMark",
+                    transitionIcon: "",
                     transitionLabel: "Resolved Ticket"
                 },
                 {
@@ -319,7 +319,7 @@ const Workflow: React.FC = (props) => {
         <Stack horizontal verticalAlign="center" horizontalAlign={"center"}>
             {/* <ActionButtons /> */}
             {/* <ListActionButton/> */}
-            {/* <Board/> */}
+            <Board />
         </Stack>
     )
 }

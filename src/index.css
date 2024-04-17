@@ -11,3 +11,86 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* CSS untuk mengontrol transisi */
+.modal-wrapper {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: stretch;
+  transition-timing-function: linear;
+
+  overflow: hidden;
+  transition: width 0.5s, height 0.5s;
+  /* Atur durasi dan fungsi timing sesuai keinginan Anda */
+}
+
+/* CSS untuk mengontrol ukuran modal pada setiap langkah */
+/* .step-1 {
+  width: 300px;
+  height: 300px;
+  border: 1px solid #ff0000;
+  transition-timing-function: linear;
+}
+.step-2 {
+  width: 700px;
+  height: 700px;
+  border: 1px solid #007b52;
+  transition-timing-function: linear;
+}
+
+.step-3 {
+  width: 500px;
+  height: 300px;
+  border: 1px solid #fbff00;
+  transition-timing-function: linear;
+} */
+.step-1 {
+  width: 750px;
+  height: 332px;
+}
+
+.step-2 {
+  width: 1000px;
+  height: 530px;
+}
+
+.step-3 {
+  width: 800px;
+  height: 245px;
+}
+
+.step-4 {
+  width: 655px;
+  height: 212px;
+}
+
+.step-5 {
+  width: 565px;
+  height: 488px;
+}
+
+.floating-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  /* background-color: #007BFF; */
+  color: #fff;
+  border: none;
+  /* border-radius: 50%; */
+  /* padding: 15px 20px; */
+  /* cursor: pointer; */
+}
+
+.dropdown-disabled>.ant-select-selector {
+  cursor: pointer !important;
+  border-width: 1px !important;
+  border-style: solid !important;
+  border-color: #f3f2f1 !important;
+}
+
+.dropdown-active>.ant-select-selector {
+  cursor: pointer !important;
+  border-width: 1px !important;
+  border-style: solid !important;
+  border-color: rgb(96, 94, 92) !important;
+}

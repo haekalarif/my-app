@@ -4,45 +4,46 @@
   "private": true,
   "dependencies": {
     "@aldabil/react-scheduler": "^2.7.10",
+    "@azure/cosmos": "^4.0.0",
     "@cyntler/react-doc-viewer": "^1.13.0",
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
     "@fluentui/react": "^8.109.10",
+    "@kitameraki/teamswork-library": "^1.0.29",
     "@mui/icons-material": "^5.2.5",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
-    "@types/node": "^16.18.34",
-    "@types/react": "^18.2.8",
     "@types/react-beautiful-dnd": "^13.1.0",
-    "@types/react-dom": "^18.2.4",
-    "antd": "^4.24.10",
+    "antd": "^4.18.6",
     "axios": "^1.4.0",
-    "date-fns": "^2.30.0",
+    "date-fns": "^2.29.3",
+    "file-saver": "^2.0.5",
     "http-server": "^14.1.1",
     "jodit-react": "^1.3.39",
     "moment": "^2.29.4",
-    "react": "^18.2.0",
+    "react": "^17.0.2",
     "react-beautiful-dnd": "^13.1.0",
     "react-big-calendar": "^1.6.9",
     "react-color": "^2.19.3",
     "react-device-detect": "^1.15.0",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
-    "react-dom": "^18.2.0",
+    "react-dom": "^17.0.2",
     "react-file-viewer": "^1.2.1",
+    "react-flow-renderer": "^10.3.17",
     "react-h5-audio-player": "^3.8.6",
+    "react-microsoft-clarity": "^1.2.0",
     "react-quill": "^2.0.0",
     "react-reader": "^1.2.1",
     "react-scripts": "5.0.1",
     "react-syntax-highlighter": "^15.5.0",
     "reactflow": "^11.8.3",
     "scroll-into-view": "^1.16.2",
-    "teamswork-library": "file:../teamswork-library",
-    "typescript": "^4.9.5",
     "uuid": "^8.3.0",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "xlsx": "^0.18.5"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -69,6 +70,15 @@
     ]
   },
   "devDependencies": {
-    "@types/react-big-calendar": "^1.6.4"
+    "@types/file-saver": "^2.0.5",
+    "@types/node": "^17.0.34",
+    "@types/react": "^17.0.2",
+    "@types/react-big-calendar": "^1.6.4",
+    "@types/react-dom": "^17.0.2",
+    "typescript": "^5.2.2"
+  },
+  "resolutions": {
+    "@types/react": "17.0.0",
+    "@types/react-dom": "17.0.0"
   }
 }

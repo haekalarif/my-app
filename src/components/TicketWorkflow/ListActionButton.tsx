@@ -197,7 +197,11 @@ const ListActionButton: React.FunctionComponent = (props) => {
                                 <ActionButton
                                     iconProps={{ iconName: item.transitionIcon }}
                                     id={item.targetId}
-                                    // text={item.transitionLabel}
+                                    styles={{
+                                        textContainer: {
+                                            marginLeft: !!!item.transitionIcon && 23
+                                        }
+                                    }}
                                     text={item.transitionLabel}
                                     onClick={(e: any) => onClickWorkflowButton(e, activeItem)}
                                 />

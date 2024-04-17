@@ -352,63 +352,63 @@ const AntdCalendar: React.FC<ICalendarView> = (props) => {
 
         const today = format(new Date(date), 'yyyy-MM-dd') == format(now, 'yyyy-MM-dd');
         const countTicket = ticketList.length;
-        return (
-            <Droppable droppableId={`event_${new Date(date)}`}>
-                {(provided: any, snapshot: any) => (
-                    <div
-                        {...provided.droppableProps}
-                        ref={provided.innerRef}
-                        isDraggingOver={snapshot.isDraggingOver}
+        return (<></>
+            // <Droppable droppableId={`event_${new Date(date)}`}>
+            //     {(provided: any, snapshot: any) => (
+            //         <div
+            //             {...provided.droppableProps}
+            //             ref={provided.innerRef}
+            //             isDraggingOver={snapshot.isDraggingOver}
 
-                    >
-                        {/* ant-picker-cell-inner */}
-                        <div className={`ant-picker-calendar-date ${today && 'ant-picker-calendar-date-today'}`}>
-                            <div className="ant-picker-calendar-date-value">
-                                {date.format("D")}
-                            </div>
-                            <div className="ant-picker-calendar-date-content">
-                                {ticketList.map((item, index) => (
-                                    <Draggable key={item.id} draggableId={item.id} index={index}>
-                                        {(provided: any, snapshot: any) => (
-                                            <div
-                                                ref={provided.innerRef}
-                                                {...provided.dragHandleProps}
-                                                {...provided.draggableProps}
-                                                isDragging={snapshot.isDragging}
-                                            >
-                                                <Stack
-                                                    style={{
-                                                        border: `1px solid ${iconlist[item.priority].color}`,
-                                                        borderRadius: 5,
-                                                        margin: '3px 0px',
-                                                        padding: '1px 6px',
-                                                        background: "#fff",
-                                                    }}
-                                                    horizontal
-                                                    tokens={{ childrenGap: 5 }}
-                                                    verticalAlign="center"
-                                                    title={item.title}
-                                                >
-                                                    <FontIcon
-                                                        iconName={iconlist[item.priority].iconName} style={{ color: iconlist[item.priority].color, fontSize: 9 }}
-                                                    />
-                                                    <Text variant="small" style={{ whiteSpace: "nowrap", overflow: "hidden" }}>{item.title}</Text>
-                                                </Stack>
-                                            </div>
-                                        )}
-                                    </Draggable>
-                                ))}
-                                <Badge count={countTicket} color="red" />
-                            </div>
-                            {today &&
-                                <ActionButton iconProps={{ iconName: "More" }} />
-                            }
+            //         >
+            //             {/* ant-picker-cell-inner */}
+            //             <div className={`ant-picker-calendar-date ${today && 'ant-picker-calendar-date-today'}`}>
+            //                 <div className="ant-picker-calendar-date-value">
+            //                     {date.format("D")}
+            //                 </div>
+            //                 <div className="ant-picker-calendar-date-content">
+            //                     {ticketList.map((item, index) => (
+            //                         <Draggable key={item.id} draggableId={item.id} index={index}>
+            //                             {(provided: any, snapshot: any) => (
+            //                                 <div
+            //                                     ref={provided.innerRef}
+            //                                     {...provided.dragHandleProps}
+            //                                     {...provided.draggableProps}
+            //                                     isDragging={snapshot.isDragging}
+            //                                 >
+            //                                     <Stack
+            //                                         style={{
+            //                                             border: `1px solid ${iconlist[item.priority].color}`,
+            //                                             borderRadius: 5,
+            //                                             margin: '3px 0px',
+            //                                             padding: '1px 6px',
+            //                                             background: "#fff",
+            //                                         }}
+            //                                         horizontal
+            //                                         tokens={{ childrenGap: 5 }}
+            //                                         verticalAlign="center"
+            //                                         title={item.title}
+            //                                     >
+            //                                         <FontIcon
+            //                                             iconName={iconlist[item.priority].iconName} style={{ color: iconlist[item.priority].color, fontSize: 9 }}
+            //                                         />
+            //                                         <Text variant="small" style={{ whiteSpace: "nowrap", overflow: "hidden" }}>{item.title}</Text>
+            //                                     </Stack>
+            //                                 </div>
+            //                             )}
+            //                         </Draggable>
+            //                     ))}
+            //                     <Badge count={countTicket} color="red" />
+            //                 </div>
+            //                 {today &&
+            //                     <ActionButton iconProps={{ iconName: "More" }} />
+            //                 }
 
-                        </div>
-                        {/* {provided.placeholder} */}
-                    </div>
-                )}
-            </Droppable>
+            //             </div>
+            //             {/* {provided.placeholder} */}
+            //         </div>
+            //     )}
+            // </Droppable>
         )
     };
 
@@ -749,122 +749,124 @@ const AntdCalendar: React.FC<ICalendarView> = (props) => {
         }
     }, []);
     return (
-        <DragDropContext
-            onDragStart={() => setOnDrag(true)}
-            onDragEnd={(date) => {
-                handleOnDragEnd(date);
-                setOnDrag(false);
-            }}>
-            <div style={{ padding: 20 }}>
-                <div className="ms-Grid" dir="ltr">
-                    <div className="ms-Grid-col ms-sm12 ms-md12 ms-xl12">
-                        <Stack horizontal>
-                            <IconButton
-                                checked={viewMode == "calendar"}
-                                iconProps={{ iconName: "Calendar" }}
-                                onClick={() => setViewMode("calendar")}
-                                style={{
-                                    border: '1px solid #a9a9a9',
-                                    borderRadius: 0
-                                }}
-                            />
-                            <IconButton
-                                checked={viewMode == "list"}
-                                iconProps={{ iconName: "BulletedListTextMirrored" }}
-                                onClick={() => setViewMode("list")}
-                                style={{
-                                    border: '1px solid #a9a9a9',
-                                    borderRadius: 0
-                                }}
-                            />
-                        </Stack>
-                    </div>
-                    {(viewMode == "list") &&
-                        <div className="ms-Grid-row">
-                            <div className="ms-Grid-col ms-sm12 ms-md12 ms-xl12">
-                                <Text>Ticket List</Text>
-                            </div>
-                        </div>
-                    }
-
-                    {(viewMode == "calendar") &&
-                        <div className="ms-Grid-row">
-                            <div className={`ms-Grid-col ms-sm${isOpen ? '7' : '12'} ms-md${isOpen ? '7' : '12'} ms-xl${isOpen ? '7' : '12'}`}>
-                                <Calendar
-                                    dateFullCellRender={cellRenderFunc}
-                                    mode="month"
-                                    headerRender={headerRender}
-                                    onSelect={handleSelectDate}
-                                    className='defaultpanel'
-                                    value={moment(new Date('2023-07-01'))}
-                                // defaultValue={format(new Date('2023-07-01'), 'yyyy-MM-dd')}
+        <>
+            {/* <DragDropContext
+                onDragStart={() => setOnDrag(true)}
+                onDragEnd={(date) => {
+                    handleOnDragEnd(date);
+                    setOnDrag(false);
+                }}>
+                <div style={{ padding: 20 }}>
+                    <div className="ms-Grid" dir="ltr">
+                        <div className="ms-Grid-col ms-sm12 ms-md12 ms-xl12">
+                            <Stack horizontal>
+                                <IconButton
+                                    checked={viewMode == "calendar"}
+                                    iconProps={{ iconName: "Calendar" }}
+                                    onClick={() => setViewMode("calendar")}
+                                    style={{
+                                        border: '1px solid #a9a9a9',
+                                        borderRadius: 0
+                                    }}
                                 />
-                            </div>
-                            <ActionButton
-                                iconProps={{ iconName: "OpenPane" }}
-                                style={iconOpenPanelStyles}
-                                onClick={openPanel}
-                            />
-                            <Panel
-                                styles={panelStyles}
-                                isBlocking={false}
-                                isOpen={isOpen}
-                                onDismiss={dismissPanel}
-                                closeButtonAriaLabel="Close"
-                                type={PanelType.custom}
-                                customWidth="551px"
-                                onRenderNavigationContent={handleRenderNavigationContent}
-                                onRenderFooterContent={handleRenderFooterContent}
-                                isFooterAtBottom={true}
-                            >
-
-                                <div className="body" style={{ margin: '20px 0px', overflowY: "auto", maxHeight: `calc(100vh - 50px)` }} onScroll={(e) => handleOnScroll(e)} data-is-scrollable={true}>
-
-                                    {allDates.map((date, index) => {
-                                        return (
-                                            <div style={{ marginBottom: 20 }}>
-                                                {(index == 0) &&
-                                                    <Stack horizontal verticalAlign='center' tokens={{ childrenGap: 15 }}>
-                                                        <div className="line-with-text">
-                                                            <div className="line"></div>
-                                                            <div className="text">
-                                                                <Text variant='large'>
-                                                                    <strong>
-                                                                        {format(date, 'MMM yyyy')}
-                                                                    </strong>
-                                                                </Text>
-                                                            </div>
-                                                            <div className="line"></div>
-                                                        </div>
-                                                    </Stack>
-                                                }
-                                                <Stack style={{ marginBottom: 10 }} className={`scroll-target-${format(new Date(date), 'yyyy-MM-dd')}`}>
-                                                    <Text><strong>{format(date, 'd EEEE')}</strong></Text>
-                                                </Stack>
-                                                {data.filter((item) => format(new Date(item?.expectedDate), 'yyyy MM dd') == format(date, 'yyyy MM dd')).length > 0 &&
-                                                    <Stack style={{ minHeight: 70 }}>
-                                                        {data.filter((item) => format(new Date(item?.expectedDate), 'yyyy MM dd') == format(date, 'yyyy MM dd')).map((item) => {
-                                                            return (<CardRender item={item} />)
-                                                        })}
-                                                    </Stack>
-                                                }
-                                                {data.filter((item) => format(new Date(item?.expectedDate), 'yyyy MM dd') == format(date, 'yyyy MM dd')).length == 0 &&
-                                                    <Text>No Plans</Text>
-                                                }
-                                            </div>
-                                        )
-                                    })}
-                                    {data.map((item) => {
-                                        return (<CardRender item={item} />)
-                                    })
-                                    }
-                                </div>
-                            </Panel>
+                                <IconButton
+                                    checked={viewMode == "list"}
+                                    iconProps={{ iconName: "BulletedListTextMirrored" }}
+                                    onClick={() => setViewMode("list")}
+                                    style={{
+                                        border: '1px solid #a9a9a9',
+                                        borderRadius: 0
+                                    }}
+                                />
+                            </Stack>
                         </div>
-                    }
+                        {(viewMode == "list") &&
+                            <div className="ms-Grid-row">
+                                <div className="ms-Grid-col ms-sm12 ms-md12 ms-xl12">
+                                    <Text>Ticket List</Text>
+                                </div>
+                            </div>
+                        }
+
+                        {(viewMode == "calendar") &&
+                            <div className="ms-Grid-row">
+                                <div className={`ms-Grid-col ms-sm${isOpen ? '7' : '12'} ms-md${isOpen ? '7' : '12'} ms-xl${isOpen ? '7' : '12'}`}>
+                                    <Calendar
+                                        dateFullCellRender={cellRenderFunc}
+                                        mode="month"
+                                        headerRender={headerRender}
+                                        onSelect={handleSelectDate}
+                                        className='defaultpanel'
+                                        value={moment(new Date('2023-07-01'))}
+                                    // defaultValue={format(new Date('2023-07-01'), 'yyyy-MM-dd')}
+                                    />
+                                </div>
+                                <ActionButton
+                                    iconProps={{ iconName: "OpenPane" }}
+                                    style={iconOpenPanelStyles}
+                                    onClick={openPanel}
+                                />
+                                <Panel
+                                    styles={panelStyles}
+                                    isBlocking={false}
+                                    isOpen={isOpen}
+                                    onDismiss={dismissPanel}
+                                    closeButtonAriaLabel="Close"
+                                    type={PanelType.custom}
+                                    customWidth="551px"
+                                    onRenderNavigationContent={handleRenderNavigationContent}
+                                    onRenderFooterContent={handleRenderFooterContent}
+                                    isFooterAtBottom={true}
+                                >
+
+                                    <div className="body" style={{ margin: '20px 0px', overflowY: "auto", maxHeight: `calc(100vh - 50px)` }} onScroll={(e) => handleOnScroll(e)} data-is-scrollable={true}>
+
+                                        {allDates.map((date, index) => {
+                                            return (
+                                                <div style={{ marginBottom: 20 }}>
+                                                    {(index == 0) &&
+                                                        <Stack horizontal verticalAlign='center' tokens={{ childrenGap: 15 }}>
+                                                            <div className="line-with-text">
+                                                                <div className="line"></div>
+                                                                <div className="text">
+                                                                    <Text variant='large'>
+                                                                        <strong>
+                                                                            {format(date, 'MMM yyyy')}
+                                                                        </strong>
+                                                                    </Text>
+                                                                </div>
+                                                                <div className="line"></div>
+                                                            </div>
+                                                        </Stack>
+                                                    }
+                                                    <Stack style={{ marginBottom: 10 }} className={`scroll-target-${format(new Date(date), 'yyyy-MM-dd')}`}>
+                                                        <Text><strong>{format(date, 'd EEEE')}</strong></Text>
+                                                    </Stack>
+                                                    {data.filter((item) => format(new Date(item?.expectedDate), 'yyyy MM dd') == format(date, 'yyyy MM dd')).length > 0 &&
+                                                        <Stack style={{ minHeight: 70 }}>
+                                                            {data.filter((item) => format(new Date(item?.expectedDate), 'yyyy MM dd') == format(date, 'yyyy MM dd')).map((item) => {
+                                                                return (<CardRender item={item} />)
+                                                            })}
+                                                        </Stack>
+                                                    }
+                                                    {data.filter((item) => format(new Date(item?.expectedDate), 'yyyy MM dd') == format(date, 'yyyy MM dd')).length == 0 &&
+                                                        <Text>No Plans</Text>
+                                                    }
+                                                </div>
+                                            )
+                                        })}
+                                        {data.map((item) => {
+                                            return (<CardRender item={item} />)
+                                        })
+                                        }
+                                    </div>
+                                </Panel>
+                            </div>
+                        }
+                    </div>
                 </div>
-            </div>
-        </DragDropContext>
+            </DragDropContext> */}
+        </>
     )
 }
 
