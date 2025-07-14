@@ -1,7 +1,7 @@
 import axios from "axios";
 import moment, { Moment } from "moment";
 import React, { useEffect } from "react";
-
+import en from "../lang/en.json";
 
 
 const SlaCalculate: React.FC = (props) => {
@@ -67,454 +67,9 @@ const SlaCalculate: React.FC = (props) => {
             }
         }
     }
-
-    function slaInfoControl(createdDateTime, alertNotification, type: 'frt' | 'rt') {
-        const slaBlue = "#b4c7e7";
-        const slaOrange = "#ffc000";
-        const slaGreen = "#92d050";
-        const slaRed = "#d91813";
-
-        const alertNotificationData = alertNotificationBase(alertNotification);
-        let alertNotificationSla;
-
-        if (type == "frt") {
-            alertNotificationSla = {
-                "isUrgent": alertNotificationData?.serviceLevelAgreement?.isFrtUrgent,
-                "urgentTime": alertNotificationData?.serviceLevelAgreement?.frtUrgentTime,
-                "urgentDuration": alertNotificationData?.serviceLevelAgreement?.frtUrgentDuration,
-                "isImportant": alertNotificationData?.serviceLevelAgreement?.isFrtImportant,
-                "importantTime": alertNotificationData?.serviceLevelAgreement?.frtImportantTime,
-                "importantDuration": alertNotificationData?.serviceLevelAgreement?.frtImportantDuration,
-                "isLow": alertNotificationData?.serviceLevelAgreement?.isFrtLow,
-                "lowTime": alertNotificationData?.serviceLevelAgreement?.frtLowTime,
-                "lowDuration": alertNotificationData?.serviceLevelAgreement?.frtLowDuration,
-                "isMedium": alertNotificationData?.serviceLevelAgreement?.isFrtMedium,
-                "mediumTime": alertNotificationData?.serviceLevelAgreement?.frtMediumTime,
-                "mediumDuration": alertNotificationData?.serviceLevelAgreement?.frtMediumDuration,
-            }
-        } else {
-            alertNotificationSla = {
-                "isUrgent": alertNotificationData?.serviceLevelAgreement?.isRtUrgent,
-                "urgentTime": alertNotificationData?.serviceLevelAgreement?.rtUrgentTime,
-                "urgentDuration": alertNotificationData?.serviceLevelAgreement?.rtUrgentDuration,
-                "isImportant": alertNotificationData?.serviceLevelAgreement?.isRtImportant,
-                "importantTime": alertNotificationData?.serviceLevelAgreement?.rtImportantTime,
-                "importantDuration": alertNotificationData?.serviceLevelAgreement?.rtImportantDuration,
-                "isLow": alertNotificationData?.serviceLevelAgreement?.isRtLow,
-                "lowTime": alertNotificationData?.serviceLevelAgreement?.rtLowTime,
-                "lowDuration": alertNotificationData?.serviceLevelAgreement?.rtLowDuration,
-                "isMedium": alertNotificationData?.serviceLevelAgreement?.isRtMedium,
-                "mediumTime": alertNotificationData?.serviceLevelAgreement?.rtMediumTime,
-                "mediumDuration": alertNotificationData?.serviceLevelAgreement?.rtMediumDuration,
-            }
-        }
-
-
-        let now = new Date();
-        // const createdDate = new Date(createdDateTime);
-        // const workingHour: number = alertNotification.serviceLevelAgreement.slaEndTime.hours - alertNotification.serviceLevelAgreement.slaStartTime.hours;
-
-        // Calculate limit first response time
-        let deadline: Moment;
-
-        if (alertNotificationSla.isUrgent) {
-            if (alertNotificationSla.urgentTime.includes("days")) {
-                deadline = setLimitDateDays(createdDateTime, alertNotification, alertNotificationSla.urgentDuration)
-            } else {
-                deadline = setLimitDateHrs(createdDateTime, alertNotification, alertNotificationSla.urgentDuration)
-            }
-        }
-
-
-        let result: { text: string, backgroundColor: string };
-        if (type === 'frt') {
-            // if (ticket.firstTimeResponse) {
-            //     const frt = new Date(ticket.firstTimeResponse);
-            //     const dur: number = durationControl(createdDate, frt, alertNotification);
-            //     if (frt < deadline) {
-            //         result = {
-            //             text: `${text.container.ViewCase.firstResponseTime} ${shortenDuration(dur, workingHour)}`,
-            //             backgroundColor: slaGreen,
-            //         }
-            //     } else {
-            //         result = {
-            //             text: `${text.container.ViewCase.firstResponseTime} ${shortenDuration(dur, workingHour)}`,
-            //             backgroundColor: slaRed,
-            //         }
-            //     }
-            // } else {
-            console.log("deadline", deadline)
-            console.log("now", now)
-            // now = new Date("2023-09-07T11:26:31.440Z")
-            // if (now < deadline) {
-            //     // const dur: number = durationControl(now, deadline, alertNotification);
-            //     const dur: number = Math.round((deadline.getTime() - now.getTime()) / (1000 * 60));
-            //     console.log("duration", dur);
-            //     result = {
-            //         text: `${shortenDuration(dur, 24)}`,
-            //         backgroundColor: dur > 60 ? slaBlue : slaOrange,
-            //     }
-            // } else {
-            //     console.log("created date", createdDate);
-            //     console.log("now", now)
-            //     const dur: number = durationControl(createdDate, now, alertNotification);
-            //     result = {
-            //         text: `${shortenDuration(dur, workingHour)}`,
-            //         backgroundColor: slaRed,
-            //     }
-            // }
-            // }
-        } else {
-            // if (ticket.timeResolution) {
-            //     const rt = new Date(ticket.timeResolution);
-            //     const dur: number = durationControl(createdDate, rt, alertNotification);
-            //     if (new Date(ticket.timeResolution) < deadline) {
-            //         result = {
-            //             text: `${text.container.ViewCase.resolution} ${shortenDuration(dur, workingHour)}`,
-            //             backgroundColor: slaGreen,
-            //         }
-            //     } else {
-            //         result = {
-            //             text: `${text.container.ViewCase.resolution} ${shortenDuration(dur, workingHour)}`,
-            //             backgroundColor: slaRed,
-            //         }
-            //     }
-            // } else {
-            //     if (now < deadline) {
-            //         // const dur: number = durationControl(now, deadline, alertNotification);
-            //         const dur: number = Math.round((deadline.getTime() - now.getTime()) / (1000 * 60));
-            //         result = {
-            //             text: `${text.container.ViewCase.mustResolve} ${shortenDuration(dur, 24)}`,
-            //             backgroundColor: dur > (60 * 24) ? slaBlue : slaOrange,
-            //         }
-            //     } else {
-            //         const dur: number = durationControl(createdDate, now, alertNotification);
-            //         result = {
-            //             text: `${text.container.ViewCase.unresolvedFor} ${shortenDuration(dur, workingHour)}`,
-            //             backgroundColor: slaRed,
-            //         }
-            //     }
-            // }
-        }
-
-        return result;
-
-    }
-    function isMoreThanEndTime
-        (
-            slaHour: number,
-            limitDate: moment.Moment,
-            startTime: { hour: number, minutes: number },
-            hourSpent: number,
-            week: string
-        ) {
-        let newLimitDate = moment(limitDate);
-
-        while (slaHour > 0) {
-            newLimitDate.add(1, 'days');
-            newLimitDate.hours(startTime.hour).minutes(startTime.minutes);
-            newLimitDate.add((slaHour - hourSpent), 'hours');
-
-            let helperDate = newLimitDate.clone();
-            helperDate.hours(startTime.hour).minutes(startTime.minutes);
-
-            let remain = newLimitDate.diff(helperDate, 'hours');
-
-            slaHour = slaHour - (hourSpent + remain);
-            hourSpent = remain;
-
-            // if weekdays only
-            if (week.includes('weekdays')) {
-                while (newLimitDate.days() == 6 || newLimitDate.days() == 0) {
-                    newLimitDate.add(1, 'days');
-                }
-            }
-
-        }
-        return newLimitDate;
-    }
-
-    // function calculateLimitHours(ticketCreatedDate: Date, alertNotification, durations: number, timezoneOffset): Date {
-
-    //     const week = alertNotification.serviceLevelAgreement.slaWeek;
-    //     let slaHour = durations;
-    //     let startTime = {
-    //         "hour": hourUTCToLocal(alertNotification.serviceLevelAgreement.slaStartTime.hours, timezoneOffset),
-    //         "minutes": alertNotification.serviceLevelAgreement.slaStartTime.minutes
-    //     }
-    //     let endTime = {
-    //         "hour": hourUTCToLocal(alertNotification.serviceLevelAgreement.slaEndTime.hours, timezoneOffset),
-    //         "minutes": alertNotification.serviceLevelAgreement.slaEndTime.minutes
-    //     }
-
-    //     // Use setLimitDateDays if slaHour is more than the number of working hour in a day
-    //     // console.log("ticket created date sebelum di initiate", ticketCreatedDate);
-    //     let newLimit: Date = new Date(ticketCreatedDate);
-    //     // console.log("ticket created date sesudah di initiate", newLimit);
-    //     // console.log("ticket created date get hour", newLimit.getHours());
-    //     const workingHour = endTime.hour - startTime.hour; // number of working hour
-    //     // console.log("ticket created date time", newLimit.toISOString());
-    //     // console.log("working hour", workingHour);
-    //     // console.log("sla hour duration", slaHour);
-    //     if (slaHour > workingHour) {
-    //         const daysCount: number = Math.floor(slaHour / workingHour);
-
-    //         newLimit = calculateLimitDays(newLimit, alertNotification, daysCount, timezoneOffset !== undefined ? timezoneOffset : undefined);
-    //         slaHour = slaHour - (daysCount * workingHour);
-    //     }
-
-    //     // this is ticket created date
-    //     // this is ticket created date + sla hours per priority
-    //     // this is remaining hour ticket from ticket created - limit hour sla
-    //     let limitEndTimeWorkHour: Date = new Date(new Date(newLimit).setHours(endTime.hour, endTime.minutes));
-    //     let remainingTime = Math.ceil((limitEndTimeWorkHour.getTime() - newLimit.getTime()) / (1000 * 3600));
-
-    //     // console.log("limit end time work hour", limitEndTimeWorkHour.toISOString());
-    //     // console.log("Remaining Time", remainingTime);
-
-    //     // if the ticket is made on a holiday which the sla arrangement is only on weekdays Monday - Friday
-    //     if (week.includes('weekdays')) {
-    //         if (newLimit.getDay() == 6 || newLimit.getDay() == 0) {
-    //             while (newLimit.getDay() == 6 || newLimit.getDay() == 0) {
-    //                 newLimit.setDate(newLimit.getDate() + 1);
-    //             }
-    //         }
-    //     }
-    //     console.log("new limit", newLimit);
-    //     // console.log("new limit get hour", newLimit.getHours());
-    //     // console.log("new limit hour", hourLocalToUTC(newLimit.getHours()));
-    //     // console.log("start time hour", startTime.hour);
-    //     // console.log("end time hour", endTime.hour);
-    //     // if ticket created before start time working hour
-    //     if (newLimit.getHours() < startTime.hour) {
-
-    //         // ticket working hours start from working hours sla, then added working hours with SLA limits per priority (First response time / Resolution time)
-    //         newLimit.setHours(startTime.hour, startTime.minutes);
-    //         // newLimit.setHours(newLimit.getHours() + slaHour);
-    //         newLimit.setHours(newLimit.getHours() + slaHour);
-
-    //         // if the limit of working hours per priority > end of working hours sla
-    //         // if (newLimit > limitEndTimeWorkHour) {
-    //         limitEndTimeWorkHour.setDate(newLimit.getDate());
-    //         limitEndTimeWorkHour.setMonth(newLimit.getMonth());
-    //         limitEndTimeWorkHour.setFullYear(newLimit.getFullYear());
-    //         if (newLimit > limitEndTimeWorkHour) {
-    //             isMoreThanEndTime(slaHour, newLimit, startTime, remainingTime, week);
-    //         }
-    //         // if ticket created after end time working hour
-    //     } else if (newLimit.getHours() > endTime.hour) {
-
-    //         console.log("new Limit before result", newLimit);
-    //         // console.log("new Limit getDate", newLimit.getDate());
-    //         newLimit.setDate(newLimit.getDate() + 1);
-    //         newLimit.setHours(startTime.hour, startTime.minutes);
-    //         console.log("new Limit after", newLimit);
-    //         // console.log("new Limit", newLimit.toISOString());
-    //         // console.log("new Limit getHours", newLimit.getHours());
-    //         // console.log(convertIndonesiaHourToUTCHour(newLimit.getHours()))
-    //         // console.log(hourLocalToUTC(newLimit.getHours()))
-    //         // console.log("sla hour duration", hourLocalToUTC(newLimit.getHours()) + slaHour);
-    //         newLimit.setHours(newLimit.getHours() + slaHour);
-
-    //         // console.log("new Limit result", newLimit.toISOString());
-    //         console.log("new Limit result", newLimit);
-
-    //         limitEndTimeWorkHour.setDate(newLimit.getDate());
-    //         limitEndTimeWorkHour.setMonth(newLimit.getMonth());
-    //         limitEndTimeWorkHour.setFullYear(newLimit.getFullYear());
-    //         console.log("limit end time work hour result", limitEndTimeWorkHour);
-
-    //         isDayWeekdays(week, newLimit);
-    //         isDayWeekdays(week, limitEndTimeWorkHour);
-    //         // if (newLimit > limitEndTimeWorkHour) {
-    //         if (newLimit > limitEndTimeWorkHour) {
-    //             isMoreThanEndTime(slaHour, newLimit, startTime, remainingTime, week);
-    //         }
-    //         // if ticket created after on time working hour
-    //     } else {
-    //         // console.log("new Limit before result", newLimit.toISOString());
-    //         // console.log("new Limit getHour", newLimit.getHours());
-    //         // console.log("new Limit getHourUTC", (hourLocalToUTC(newLimit.getHours()) + slaHour));
-    //         newLimit.setHours(newLimit.getHours() + slaHour); //18
-    //         console.log("new Limit result", newLimit);
-    //         // console.log("new Limit result", newLimit.toISOString());
-
-    //         limitEndTimeWorkHour.setDate(newLimit.getDate());
-    //         limitEndTimeWorkHour.setMonth(newLimit.getMonth());
-    //         limitEndTimeWorkHour.setFullYear(newLimit.getFullYear());
-    //         console.log("limit end time work hour result", limitEndTimeWorkHour);
-    //         // if (newLimit > limitEndTimeWorkHour) {
-    //         // console.log(convertIndonesiaToUTC(newLimit))
-    //         // console.log(convertIndonesiaToUTC(limitEndTimeWorkHour))
-    //         // if (newLimit > limitEndTimeWorkHour) {
-    //         if (newLimit > limitEndTimeWorkHour) {
-    //             isMoreThanEndTime(slaHour, newLimit, startTime, remainingTime, week);
-    //         }
-    //     }
-
-    //     return newLimit;
-    // }
-    // function calculateLimitDays(ticketCreatedDate: Date, alertNotification, durations: number, timezoneOffset): Date {
-
-    //     const week = alertNotification.serviceLevelAgreement.slaWeek;
-    //     const ticketCreated = new Date(ticketCreatedDate);
-
-    //     let startTime = {
-    //         "hour": alertNotification.serviceLevelAgreement.slaStartTime.hours,
-    //         "minutes": alertNotification.serviceLevelAgreement.slaStartTime.minutes
-    //     }
-    //     let endTime = {
-    //         "hour": alertNotification.serviceLevelAgreement.slaEndTime.hours,
-    //         "minutes": alertNotification.serviceLevelAgreement.slaEndTime.minutes
-    //     }
-
-    //     let newLimit = new Date(ticketCreatedDate);
-
-    //     // check if sla type weekdays only
-    //     if (week.includes('weekdays')) {
-    //         if (ticketCreated.getDay() == 6 || ticketCreated.getDay() == 0) {
-    //             while (newLimit.getDay() == 6 || newLimit.getDay() == 0) {
-    //                 newLimit.setDate(newLimit.getDate() + 1);
-    //             }
-    //         }
-    //     }
-
-    //     if (newLimit.getHours() < startTime.hour) {
-
-    //         newLimit.setHours(startTime.hour, startTime.minutes);
-    //         newLimit.setDate(newLimit.getDate() + durations);
-
-    //         // check if sla type weekdays only
-    //         isDayWeekdays(week, newLimit);
-    //         // if(week.includes('weekdays')){
-    //         //   while(newLimit.getDay() == 6 || newLimit.getDay() == 0){
-    //         //     newLimit.setDate(newLimit.getDate() + 1);
-    //         //   }
-    //         // }
-
-    //     } else if (newLimit.getHours() > endTime.hour) {
-
-    //         newLimit.setHours(startTime.hour, startTime.minutes);
-    //         newLimit.setDate(newLimit.getDate() + 1);
-
-    //         // check if sla type weekdays only
-    //         isDayWeekdays(week, newLimit);
-    //         newLimit.setDate(newLimit.getDate() + durations);
-    //         // check if sla type weekdays only
-    //         isDayWeekdays(week, newLimit);
-
-
-    //     } else {
-    //         // newLimit.setHours(startTime.hour, startTime.minutes);
-    //         newLimit.setDate(newLimit.getDate() + durations);
-    //         // check if sla type weekdays only
-    //         isDayWeekdays(week, newLimit);
-    //     }
-
-    //     return newLimit;
-    // }
-    function isDayWeekdays(week: string, newLimit: moment.Moment) {
-        if (week.includes('weekdays')) {
-            while (newLimit.days() == 6 || newLimit.days() == 0) {
-                newLimit.add(1, 'days');
-            }
-        }
-
-        return newLimit;
-    }
-
-    function durationControl(startDate: Date, endDate: Date, alertNotification) {
-        const workingDays = alertNotification.serviceLevelAgreement.slaWeek;
-        // const slaStartTime = hourUTCToLocal(alertNotification.serviceLevelAgreement.slaStartTime.hours), alertNotification.serviceLevelAgreement.slaStartTime.minutes));
-        const workHourStart: number = hourUTCToLocal(alertNotification.serviceLevelAgreement.slaStartTime.hours);
-        const workMinuteStart: number = alertNotification.serviceLevelAgreement.slaStartTime.minutes;
-        const workHourEnd: number = hourUTCToLocal(alertNotification.serviceLevelAgreement.slaEndTime.hours);
-        const workMinuteEnd: number = alertNotification.serviceLevelAgreement.slaEndTime.minutes;
-
-        let loopTime: Date = new Date(startDate);
-        let lifeTimeTicket: number = 0;
-
-        // console.log("sla start time", slaStartTime)
-        // console.log("sla end time", slaEndTime)
-
-        // console.log("Start: ", startDate);
-        // console.log("End: ", endDate);
-        console.log("================================================")
-        console.log("work hour start", workHourStart)
-        console.log("work hour end", workHourEnd)
-        console.log("loopTime", loopTime);
-        console.log("endDate", endDate);
-        endDate.setDate(endDate.getDate() + 1)
-        // 2023-08-28T03:00:00.963Z
-        while (loopTime <= endDate) {
-            if (workingDays.includes("weekdays")) {
-                if (loopTime.getDay() === 0 || loopTime.getDay() === 6) {
-                    loopTime.setDate(loopTime.getDate() + 1);
-                    loopTime.setHours(workHourStart, workMinuteStart);
-                }
-            }
-            console.log("loopTime getHours", loopTime.getHours());
-            // now is not weekend
-            if (loopTime.getHours() >= workHourStart) {
-                // ticket created date < slaEndTime hours
-                if (loopTime.getHours() < workHourEnd) {
-                    // (ticket created date + one houres) < slaEndTime hours
-                    if ((loopTime.getHours() + 1) <= workHourEnd) {
-                        // lifetimeticket = lifeTimeTicket + one hours(in hours) + (looptime + 1 hours)
-                        loopTime.setHours(loopTime.getHours() + 1);
-                        if (loopTime < endDate) {
-                            lifeTimeTicket += 60;
-                        } else {
-                            const min = Math.ceil((endDate.getTime() - (loopTime.getTime() - (1000 * 60 * 60))) / (60000));
-                            lifeTimeTicket += min;
-                        }
-                    } else {
-                        if (loopTime.getMinutes() <= workMinuteEnd) {
-                            lifeTimeTicket += 60;
-                        } else {
-                            let min = (60 - (loopTime.getMinutes() - workMinuteEnd));
-                            lifeTimeTicket += min;
-
-                            loopTime.setDate(loopTime.getDate() + 1);
-                            loopTime.setHours(workHourStart, workMinuteStart);
-
-                            if (workingDays.includes("weekdays")) {
-                                if (loopTime.getDay() === 0 || loopTime.getDay() === 6) {
-                                    loopTime.setDate(loopTime.getDate() + 1);
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    // console.log("loopTime", loopTime);
-                    // console.log("loopTime", loopTime);
-                    // console.log("loopTime + 1", loopTime);
-
-                    loopTime.setDate(loopTime.getDate() + 1);
-                    loopTime.setHours(workHourStart, workMinuteStart);
-                    console.log("loopTime", loopTime);
-
-                    if (workingDays.includes("weekdays")) {
-                        if (loopTime.getDay() === 0 || loopTime.getDay() === 6) {
-                            loopTime.setDate(loopTime.getDate() + 1);
-                        }
-                    }
-                }
-            } else {
-                loopTime.setHours(workHourStart, workHourEnd);
-            }
-        }
-        // console.log("loopTime", loopTime);
-        console.log(lifeTimeTicket);
-        return lifeTimeTicket;
-    }
-    function hourUTCToLocal(hour, timezoneOffset?: number) {
-        let now = new Date();
-        let resultHour = hour - (timezoneOffset / 60);
-
-        return resultHour;
-    }
     const shortenDuration = (dur: number, workHour: number): string => {
+        // console.log(dur);
+        // console.log(workHour);
         if (dur < 60) {
             return `${dur}m`
         } else if (dur < (60 * 24)) {
@@ -523,320 +78,1234 @@ const SlaCalculate: React.FC = (props) => {
             return `${Math.round(dur / (60 * workHour))}d`
         }
     }
-    const alertNotification = {
-        "expectedDate": {
-            "isDueInNotifOn": false,
-            "dueInNotifDays": 3,
-            "isDueTodayNotifOn": true,
-            "isOverdueNotifOn": false,
-            "overdueNotifDays": 7
-        },
-        "serviceLevelAgreement": {
-            "slaWeek": "1_weekdays",
-            "slaStartTime": {
-                "hours": 2,
-                "minutes": 0
-            },
-            "slaEndTime": {
-                "hours": 12,
-                "minutes": 0
-            },
-            "isBreachesFirstResponseTime": true,
-            "breachesHoursFirstResponseTime": 1,
-            "breachesAssigneeFirstResponseTime": [
-                {
-                    "id": "c6d3d65c-fb88-4e0f-a447-b034bd515221",
-                    "text": "Irvin Sayers",
-                    "imageInitials": "IS",
-                    "imageUrl": "",
-                    "secondaryText": "IrvinS@M365B400491.OnMicrosoft.com"
-                }
-            ],
-            "isFrtUrgent": true,
-            "frtUrgentDuration": 1,
-            "frtUrgentTime": "2_hours",
-            "isFrtImportant": false,
-            "frtImportantDuration": 1,
-            "frtImportantTime": "2_hours",
-            "isFrtMedium": false,
-            "frtMediumDuration": 1,
-            "frtMediumTime": "2_hours",
-            "isFrtLow": false,
-            "frtLowDuration": 1,
-            "frtLowTime": "2_hours",
-            "isBreachesResolutionTime": true,
-            "breachesHoursResolutionTime": 1,
-            "breachesAssigneeResolutionTime": [
-                {
-                    "id": "54cb35ee-d84b-43c3-b0f2-cb593b3bcffa",
-                    "text": "Alex Wilber",
-                    "imageInitials": "AW",
-                    "imageUrl": "",
-                    "secondaryText": "AlexW@M365B400491.OnMicrosoft.com"
-                }
-            ],
-            "isRtUrgent": true,
-            "rtUrgentDuration": 1,
-            "rtUrgentTime": "2_hours",
-            "isRtImportant": false,
-            "rtImportantDuration": 1,
-            "rtImportantTime": "2_hours",
-            "isRtMedium": false,
-            "rtMediumDuration": 1,
-            "rtMediumTime": "2_hours",
-            "isRtLow": false,
-            "rtLowDuration": 1,
-            "rtLowTime": "2_hours"
+
+    function isDayWeekdays(week: string, newLimit: moment.Moment, workStartDate?: moment.Moment, workEndDate?: moment.Moment): void {
+        if (week.includes("weekdays")) {
+            while (newLimit.days() == 6 || newLimit.days() == 0) {
+                newLimit.add(1, "days");
+                workStartDate?.add(1, "days");
+                workEndDate?.add(1, "days");
+                // newLimit = workStartDate.clone();
+            }
         }
     }
 
+    function hourLocalToUTC(hour) {
+        let now = new Date(new Date().setHours(hour));
+        let resultHour = now.getHours() + (now.getTimezoneOffset() / 60);
 
-    function setLimitDateHrs(createdDateTime: string, alertNotification: any, durations) {
+        return resultHour;
+    }
+
+    function hourUTCToLocal(hour) {
+        let now = new Date();
+        let resultHour = hour - (now.getTimezoneOffset() / 60);
+
+        return resultHour;
+    }
+    // Limit date is initially ticket created date
+    function setLimitDateDays(
+        createdDateTime: string,
+        alertNotification: any,
+        durations,
+    ) {
+
+        if (!!!isWorkingHourValid(hourUTCToLocal(alertNotification.serviceLevelAgreement.slaStartTime.hours), hourUTCToLocal(alertNotification.serviceLevelAgreement.slaEndTime.hours)))
+            return null;
+
         const week = alertNotification.serviceLevelAgreement.slaWeek;
-        const startTime = {
-            "hour": alertNotification.serviceLevelAgreement.slaStartTime.hours,
-            "minutes": alertNotification.serviceLevelAgreement.slaStartTime.minutes
+        let startWorkingHour = hourUTCToLocal(alertNotification.serviceLevelAgreement.slaStartTime.hours);
+        let endWorkingHourHour = hourUTCToLocal(alertNotification.serviceLevelAgreement.slaEndTime.hours);
+
+        if (startWorkingHour == endWorkingHourHour) {
+            startWorkingHour = 0;
+            endWorkingHourHour = 24;
         }
+
+        let startTime = {
+            hour: startWorkingHour,
+            minutes: alertNotification.serviceLevelAgreement.slaStartTime.minutes,
+        };
         let endTime = {
-            "hour": alertNotification.serviceLevelAgreement.slaEndTime.hours,
-            "minutes": alertNotification.serviceLevelAgreement.slaEndTime.minutes
+            hour: endWorkingHourHour,
+            minutes: alertNotification.serviceLevelAgreement.slaEndTime.minutes,
+        };
+        // const ticketCreated = new Date(ticketCreatedDate);
+        let limitDate = moment(createdDateTime).seconds(0).milliseconds(0);
+        let workStartDate = moment(createdDateTime)
+            .hour(startTime.hour)
+            .minute(startTime.minutes)
+            .seconds(0)
+            .milliseconds(0);
+        let workEndDate = moment(createdDateTime)
+            .hour(endTime.hour)
+            .minute(endTime.minutes)
+            .seconds(0)
+            .milliseconds(0);
+
+        // check if sla type weekdays only
+        if (week.includes("weekdays")) {
+            while (limitDate.days() == 6 || limitDate.days() == 0) {
+                workStartDate.add(1, "days");
+                workEndDate.add(1, "days");
+                limitDate = workStartDate.clone();
+            }
         }
+
+        if (limitDate.isBefore(workStartDate, "minutes")) {
+            limitDate = workStartDate.clone();
+        } else if (limitDate.isSameOrAfter(workEndDate, "minutes")) {
+            workStartDate.add(1, "days");
+            limitDate = workStartDate.clone();
+        }
+
+        let remainingDuration: number = durations;
+
+        while (remainingDuration > 0) {
+            if (week.includes("weekdays") && (limitDate.days() == 6 || limitDate.days() == 0)) {
+                limitDate.add(1, "days");
+            } else {
+                limitDate.add(1, "days");
+
+                if (week.includes("weekdays")) {
+                    if (limitDate.days() == 6) {
+                        limitDate.add(2, "days");
+                    } else if (limitDate.days() == 0) {
+                        limitDate.add(1, "days");
+                    }
+                }
+                remainingDuration--;
+            }
+        }
+        return limitDate;
+    }
+
+    // At the start limitDate is the ticket creation date
+    function setLimitDateHrs(
+        createdDateTime: string,
+        alertNotification: any,
+        durations,
+    ) {
+        if (!!!isWorkingHourValid(hourUTCToLocal(alertNotification.serviceLevelAgreement.slaStartTime.hours), hourUTCToLocal(alertNotification.serviceLevelAgreement.slaEndTime.hours)))
+            return null;
+
+        const week = alertNotification.serviceLevelAgreement.slaWeek;
+        let startWorkingHour = hourUTCToLocal(alertNotification.serviceLevelAgreement.slaStartTime.hours);
+        let endWorkingHourHour = hourUTCToLocal(alertNotification.serviceLevelAgreement.slaEndTime.hours);
+
+        if (startWorkingHour == endWorkingHourHour) {
+            startWorkingHour = 0;
+            endWorkingHourHour = 24;
+        }
+
+        let startTime = {
+            hour: startWorkingHour,
+            minutes: alertNotification.serviceLevelAgreement.slaStartTime.minutes,
+        };
+        let endTime = {
+            hour: endWorkingHourHour,
+            minutes: alertNotification.serviceLevelAgreement.slaEndTime.minutes,
+        };
+
         const workingHour = endTime.hour - startTime.hour; // number of working hour
 
-        let limitDate = moment(createdDateTime);
-        console.log("limit date 1", limitDate);
+        let limitDate = moment(createdDateTime).seconds(0).milliseconds(0);
+        let workStartDate = moment(createdDateTime)
+            .hour(startTime.hour)
+            .minute(startTime.minutes)
+            .seconds(0)
+            .millisecond(0);
+        let workEndDate = moment(createdDateTime)
+            .hour(endTime.hour)
+            .minute(endTime.minutes)
+            .seconds(0)
+            .milliseconds(0);
         let slaHour = durations;
-
-        // console.log("limit date before operation (hours)", limitDate);
 
         // Use setLimitDateDays if slaHour is more than the number of working hour in a day
         if (slaHour > workingHour) {
             const daysCount: number = Math.floor(slaHour / workingHour);
 
             limitDate = setLimitDateDays(createdDateTime, alertNotification, daysCount);
-            slaHour = slaHour - (daysCount * workingHour);
+
+            const dayDifference = limitDate.diff(moment(createdDateTime), 'days');
+            workStartDate.add(dayDifference, 'days');
+            workEndDate.add(dayDifference, 'days');
+
+            slaHour = slaHour - daysCount * workingHour;
         }
-        console.log("limit date 2", limitDate);
+
+        // // helperDate value is the same as limitDate at the start
+        // if ticket created before working hour
+        if (limitDate.isBefore(workStartDate, "minutes")) {
+            // ticket working hours start from working hours sla, then added working hours with SLA limits per priority (First response time / Resolution time)
+            limitDate = workStartDate.clone();
+            // if ticket created after end time working hour
+        } else if (limitDate.isSameOrAfter(workEndDate, "minutes")) {
+            workStartDate.add(1, "days");
+            workEndDate.add(1, "days");
+            limitDate = workStartDate.clone();
+        }
+
+        let remainingTime: number = slaHour;
+
+        while (remainingTime > 0) {
+            if (week.includes("weekdays") && (limitDate.days() == 6 || limitDate.days() == 0)) {
+
+                workStartDate.add(1, "days");
+                workEndDate.add(1, "days");
+                limitDate = workStartDate.clone();
+            } else {
+                if (remainingTime < Math.floor((workEndDate.unix() - limitDate.unix()) / 3600)) {
+                    limitDate.add(remainingTime, "hours");
+                    remainingTime = 0;
+                } else {
+                    if (limitDate.clone().add(1, 'hours').isSameOrBefore(workEndDate, "minutes")) {
+                        limitDate.add(1, 'hours');
+                        remainingTime--;
+                    } else {
+                        const overWorkhourMinutes: number = Math.floor((limitDate.clone().add(1, 'hours').unix() - workEndDate.unix()) / 60);
+
+                        workStartDate.add(1, "days");
+                        workEndDate.add(1, "days");
+                        limitDate = workStartDate.clone().add(overWorkhourMinutes, 'minutes');
+                        // remainingTime--;
+
+                        if (week.includes("weekdays")) {
+                            if (limitDate.days() == 6) {
+                                limitDate.add(2, "days");
+                                workStartDate.add(2, "days");
+                                workEndDate.add(2, "days");
+                            } else if (limitDate.days() == 0) {
+                                limitDate.add(1, "days");
+                                workStartDate.add(1, "days");
+                                workEndDate.add(1, "days");
+                            }
+                        }
+                        remainingTime--;
+                    }
+                }
+            }
+
+        }
+        return limitDate;
+    }
+
+    function durationControl(
+        startDate: Date,
+        endDate: Date,
+        alertNotification: any
+    ) {
+
+        if (!!!isWorkingHourValid(hourUTCToLocal(alertNotification.serviceLevelAgreement.slaStartTime.hours), hourUTCToLocal(alertNotification.serviceLevelAgreement.slaEndTime.hours)))
+            return null;
+
+        let startWorkingHour = hourUTCToLocal(alertNotification.serviceLevelAgreement.slaStartTime.hours);
+        let endWorkingHourHour = hourUTCToLocal(alertNotification.serviceLevelAgreement.slaEndTime.hours);
+
+        if (startWorkingHour == endWorkingHourHour) {
+            startWorkingHour = 0;
+            endWorkingHourHour = 24;
+        }
+
+        const week = alertNotification.serviceLevelAgreement.slaWeek;
+        const workHourStart: number = startWorkingHour;
+        const workMinuteStart: number = alertNotification.serviceLevelAgreement.slaStartTime.minutes;
+
+        const workHourEnd: number = endWorkingHourHour
+        const workMinuteEnd: number = alertNotification.serviceLevelAgreement.slaEndTime.minutes;
+
+        // let loopTime: Date = new Date(startDate);
+        let loopTime = moment(startDate);
+        let endTime = moment(endDate);
+
+        let workStartDate = moment(startDate).hour(workHourStart).minute(workMinuteStart);
+        let workEndDate = moment(startDate).hour(workHourEnd).minute(workMinuteEnd);
+
+        let lifeTimeTicket: number = 0;
+
+        if (loopTime.isBefore(workStartDate, "minutes")) {
+            loopTime = workStartDate.clone();
+        } else if (loopTime.isAfter(workEndDate, "minutes")) {
+            workStartDate.add(1, 'days');
+            workEndDate.add(1, 'days');
+            loopTime = workStartDate.clone();
+        }
 
         // if the ticket is made on a holiday which the sla arrangement is only on weekdays Monday - Friday
-        if (week.includes('weekdays')) {
-            while (limitDate.days() == 6 || limitDate.days() == 0) {
-                limitDate.add(1, 'days');
+        if (week.includes("weekdays")) {
+            while (loopTime.days() == 6 || loopTime.days() == 0) {
+                workStartDate.add(1, "days");
+                workEndDate.add(1, "days");
+                loopTime = workStartDate.clone();
             }
         }
-        console.log("limit date 3", limitDate);
-        // helperDate value is the same as limitDate at the start
-        let workingHourEndTime = moment(limitDate);
-        workingHourEndTime.hours(endTime.hour).minutes(endTime.minutes);
+        // console.log("endTime", endTime.toDate());
+        // console.log("workEndDate", workEndDate.toDate());
+        while (endTime.isAfter(loopTime, "minutes")) {
+            if (endTime.isBefore(workEndDate, "minutes")) {
+                // console.log("case 1")
+                lifeTimeTicket += endTime.diff(loopTime, 'minutes');
+                break;
+            } else {
+                // console.log("case 2")
+                lifeTimeTicket += workEndDate.diff(loopTime, 'minutes');
 
-        console.log("Working Hour Start Time")
-        console.log(moment(limitDate).hours(startTime.hour).minutes(startTime.minutes));
-        console.log("");
+                workStartDate.add(1, "days");
+                workEndDate.add(1, "days");
+                loopTime = workStartDate.clone();
 
-        console.log("Working Hour End Time")
-        console.log(workingHourEndTime);
-        console.log("");
-
-        let hourSpent = workingHourEndTime.diff(limitDate, 'hours');
-
-        console.log("Different hour created ticket & working end time");
-        console.log(hourSpent);
-        console.log("");
-
-        console.log("Created Date Time Ticket")
-        console.log(limitDate);
-        console.log("");
-
-        // if ticket created before working hour
-        if (limitDate.hours() < startTime.hour) {
-            console.log("Case 1")
-            // ticket working hours start from working hours sla, then added working hours with SLA limits per priority (First response time / Resolution time)
-            console.log("limit date")
-            console.log(limitDate);
-            limitDate.hours(startTime.hour).minutes(startTime.minutes);
-            console.log(limitDate);
-            limitDate.add(slaHour, 'hours');
-            console.log(limitDate);
-
-            // if the limit of working hours > working hours
-            if (limitDate.isAfter(workingHourEndTime)) {
-                limitDate = isMoreThanEndTime(slaHour, limitDate, startTime, hourSpent, week);
-                console.log(limitDate);
+                isDayWeekdays(week, loopTime, workStartDate, workEndDate);
             }
-
-            // if ticket created after end time working hour
-        } else if (limitDate.hours() > endTime.hour) {
-            console.log("Case 2")
-            console.log("limit date")
-            console.log(limitDate);
-            limitDate.add(1, 'days');
-            console.log(limitDate);
-            limitDate.hours(startTime.hour).minutes(startTime.minutes);
-            console.log(limitDate);
-            limitDate.add(slaHour, 'hours');
-            console.log(limitDate);
-
-            if (limitDate.isAfter(workingHourEndTime)) {
-                limitDate = isMoreThanEndTime(slaHour, limitDate, startTime, hourSpent, week);
-                console.log(limitDate);
-            }
-            // if ticket created after on time working hour
-        } else {
-            console.log("Case 3")
-            console.log("limit date")
-            console.log(limitDate);
-            limitDate.add(slaHour, 'hours');
-            console.log(limitDate);
-
-            if (limitDate.isAfter(workingHourEndTime)) {
-                limitDate = isMoreThanEndTime(slaHour, limitDate, startTime, hourSpent, week);
-                console.log(limitDate);
-            }
-
-            console.log("Created Date Time after Start time working hour")
-            console.log(limitDate);
-            console.log("");
+            // console.log("Looptime", loopTime.toDate());
+            // console.log("LifeTimeTicket", lifeTimeTicket);
         }
-
-        // context.log("limit date after operation (hours)", limitDate);
-        return limitDate;
+        return lifeTimeTicket;
     }
 
-    function setLimitDateDays(createdDateTime: string, alertNotification: any, durations) {
-        const week = alertNotification.serviceLevelAgreement.slaWeek;
-        // const ticketCreated = new Date(ticketCreatedDate);
-        let limitDate = moment(createdDateTime);
-        console.log("limit date 1", limitDate);
-
-        let startTime = {
-            "hour": alertNotification.serviceLevelAgreement.slaStartTime.hours,
-            "minutes": alertNotification.serviceLevelAgreement.slaStartTime.minutes
-        }
-        let endTime = {
-            "hour": alertNotification.serviceLevelAgreement.slaEndTime.hours,
-            "minutes": alertNotification.serviceLevelAgreement.slaEndTime.minutes
-        }
-
-        // check if sla type weekdays only
-        if (week.includes('weekdays')) {
-            while (limitDate.days() == 6 || limitDate.days() == 0) {
-                limitDate.add(1, 'days');
-            }
-        }
-        console.log("limit date 2", limitDate);
-
-        if (limitDate.hours() < startTime.hour) {
-            console.log("Case 1");
-            console.log("limit date")
-            console.log(limitDate);
-            limitDate.hours(startTime.hour).minutes(startTime.minutes);
-            console.log(limitDate);
-            limitDate.add(1, 'days');
-            console.log(limitDate);
-
-            // check if sla type weekdays only
-            isDayWeekdays(week, limitDate);
-            console.log(limitDate);
-            // if(week.includes('weekdays')){
-            //   while(limitDate.getDay() == 6 || limitDate.getDay() == 0){
-            //     limitDate.setDate(limitDate.getDate() + 1);
-            //   }
-            // }
-
-        } else if (limitDate.hours() > endTime.hour) {
-            console.log("Case 2");
-            console.log("limit date")
-            console.log(limitDate);
-            limitDate.hours(startTime.hour).minutes(startTime.minutes);
-            console.log(limitDate);
-            limitDate.add(1, 'days');
-            console.log(limitDate);
-
-            // check if sla type weekdays only
-            isDayWeekdays(week, limitDate);
-            console.log(limitDate);
-            limitDate.add(durations, 'days');
-            console.log(limitDate);
-            // check if sla type weekdays only
-            isDayWeekdays(week, limitDate);
-            console.log(limitDate);
-
-
-        } else {
-            console.log("Case 3");
-            console.log("limit date")
-            console.log(limitDate);
-            // limitDate.setHours(startTime.hour, startTime.minutes);
-            limitDate.add(durations, 'days');
-            console.log(limitDate);
-            // check if sla type weekdays only
-            isDayWeekdays(week, limitDate);
-            console.log(limitDate);
-        }
-
-        // console.log("limit date after operation (days)", limitDate);
-        return limitDate;
+    //Start hour must be less than end hour, if start hour equal to end hour we assume working valid it's same like 24 working hour
+    function isWorkingHourValid(startHour, endHour): boolean {
+        return (startHour < endHour) ? true : (startHour === endHour);
     }
+
+    function slaInfoControl(
+        ticket: any,
+        alertNotification: any,
+        type: "frt" | "rt",
+        text: any
+    ) {
+        const slaBlue = "#b4c7e7";
+        const slaOrange = "#ffc000";
+        const slaGreen = "#92d050";
+        const slaRed = "#d91813";
+
+        // If ticket is an old ticket (currently has no 'firstTimeResponse' and 'timeResolution')
+        if (
+            !!!ticket.hasOwnProperty("firstTimeResponse") ||
+            !!!ticket.hasOwnProperty("timeResolution")
+        ) {
+            return null;
+        }
+
+        if (!!!ticket.priority) {
+            return null;
+        }
+
+        const alertNotificationData = alertNotificationBase(alertNotification);
+        let alertNotificationSla: any;
+
+        if (type == "frt") {
+            alertNotificationSla = {
+                isUrgent: alertNotificationData?.serviceLevelAgreement?.isFrtUrgent,
+                urgentTime: alertNotificationData?.serviceLevelAgreement?.frtUrgentTime,
+                urgentDuration:
+                    alertNotificationData?.serviceLevelAgreement?.frtUrgentDuration,
+                isImportant: alertNotificationData?.serviceLevelAgreement?.isFrtImportant,
+                importantTime:
+                    alertNotificationData?.serviceLevelAgreement?.frtImportantTime,
+                importantDuration:
+                    alertNotificationData?.serviceLevelAgreement?.frtImportantDuration,
+                isLow: alertNotificationData?.serviceLevelAgreement?.isFrtLow,
+                lowTime: alertNotificationData?.serviceLevelAgreement?.frtLowTime,
+                lowDuration: alertNotificationData?.serviceLevelAgreement?.frtLowDuration,
+                isMedium: alertNotificationData?.serviceLevelAgreement?.isFrtMedium,
+                mediumTime: alertNotificationData?.serviceLevelAgreement?.frtMediumTime,
+                mediumDuration:
+                    alertNotificationData?.serviceLevelAgreement?.frtMediumDuration,
+            };
+        } else {
+            alertNotificationSla = {
+                isUrgent: alertNotificationData?.serviceLevelAgreement?.isRtUrgent,
+                urgentTime: alertNotificationData?.serviceLevelAgreement?.rtUrgentTime,
+                urgentDuration:
+                    alertNotificationData?.serviceLevelAgreement?.rtUrgentDuration,
+                isImportant: alertNotificationData?.serviceLevelAgreement?.isRtImportant,
+                importantTime:
+                    alertNotificationData?.serviceLevelAgreement?.rtImportantTime,
+                importantDuration:
+                    alertNotificationData?.serviceLevelAgreement?.rtImportantDuration,
+                isLow: alertNotificationData?.serviceLevelAgreement?.isRtLow,
+                lowTime: alertNotificationData?.serviceLevelAgreement?.rtLowTime,
+                lowDuration: alertNotificationData?.serviceLevelAgreement?.rtLowDuration,
+                isMedium: alertNotificationData?.serviceLevelAgreement?.isRtMedium,
+                mediumTime: alertNotificationData?.serviceLevelAgreement?.rtMediumTime,
+                mediumDuration:
+                    alertNotificationData?.serviceLevelAgreement?.rtMediumDuration,
+            };
+        }
+
+        if (!!!alertNotificationSla.isUrgent && ticket.priority === "4_Urgent") {
+            return null;
+        }
+
+        if (
+            !!!alertNotificationSla.isImportant &&
+            ticket.priority === "3_Important"
+        ) {
+            return null;
+        }
+
+        if (!!!alertNotificationSla.isMedium && ticket.priority === "2_Medium") {
+            return null;
+        }
+
+        if (!!!alertNotificationSla.isLow && ticket.priority === "1_Low") {
+            return null;
+        }
+
+        if (ticket.id) {
+            let now = new Date();
+
+            const createdDate = new Date(ticket.createdDateTime);
+
+            if (!!!isWorkingHourValid(hourUTCToLocal(alertNotification.serviceLevelAgreement.slaStartTime.hours), hourUTCToLocal(alertNotification.serviceLevelAgreement.slaEndTime.hours)))
+                return null
+
+            const workingHour: number = (alertNotification.serviceLevelAgreement.slaStartTime.hours === alertNotification.serviceLevelAgreement.slaEndTime.hours) ? 24 :
+                hourUTCToLocal(alertNotification.serviceLevelAgreement.slaEndTime.hours) - hourUTCToLocal(alertNotification.serviceLevelAgreement.slaStartTime.hours);
+
+            // Calculate limit first response time
+            let deadline: moment.Moment;
+            switch (ticket.priority.split("_").pop()) {
+                case "Urgent":
+                    if (alertNotificationSla.isUrgent) {
+                        if (alertNotificationSla.urgentTime.includes("days")) {
+                            deadline = setLimitDateDays(
+                                ticket.createdDateTime,
+                                alertNotification,
+                                alertNotificationSla.urgentDuration
+                            );
+                        } else {
+                            deadline = setLimitDateHrs(
+                                ticket.createdDateTime,
+                                alertNotification,
+                                alertNotificationSla.urgentDuration,
+                            );
+                        }
+                    }
+                    break;
+                case "Important":
+                    if (alertNotificationSla.isImportant) {
+                        if (alertNotificationSla.importantTime.includes("days")) {
+                            deadline = setLimitDateDays(
+                                ticket.createdDateTime,
+                                alertNotification,
+                                alertNotificationSla.importantDuration
+                            );
+                        } else {
+                            deadline = setLimitDateHrs(
+                                ticket.createdDateTime,
+                                alertNotification,
+                                alertNotificationSla.importantDuration,
+                            );
+                        }
+                    }
+                    break;
+                case "Low":
+                    if (alertNotificationSla.isLow) {
+                        if (alertNotificationSla.lowTime.includes("days")) {
+                            deadline = setLimitDateDays(
+                                ticket.createdDateTime,
+                                alertNotification,
+                                alertNotificationSla.lowDuration
+                            );
+                        } else {
+                            deadline = setLimitDateHrs(
+                                ticket.createdDateTime,
+                                alertNotification,
+                                alertNotificationSla.lowDuration,
+                            );
+                        }
+                    }
+                    break;
+                case "Medium":
+                    if (alertNotificationSla.isMedium) {
+                        if (alertNotificationSla.mediumTime.includes("days")) {
+                            deadline = setLimitDateDays(
+                                ticket.createdDateTime,
+                                alertNotification,
+                                alertNotificationSla.mediumDuration
+                            );
+                        } else {
+                            deadline = setLimitDateHrs(
+                                ticket.createdDateTime,
+                                alertNotification,
+                                alertNotificationSla.mediumDuration,
+                            );
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            let result: { text: string; backgroundColor: string, isSlaOngoing: boolean };
+
+            console.log("deadline");
+            console.log(deadline.toDate());
+
+            if (type === "frt") {
+                if (ticket.firstTimeResponse) {
+                    const frt = new Date(ticket.firstTimeResponse);
+                    const dur: number = durationControl(
+                        createdDate,
+                        frt,
+                        alertNotification
+                    );
+
+                    if (frt < deadline.toDate()) {
+                        result = {
+                            text: `${text.container.ViewCase.firstResponseTime} ${shortenDuration(dur, workingHour)}`,
+                            // text: shortenDuration(dur, workingHour),
+                            backgroundColor: slaGreen,
+                            isSlaOngoing: false,
+                        };
+                    } else {
+                        result = {
+                            text: `${text.container.ViewCase.firstResponseTime} ${shortenDuration(dur, workingHour)}`,
+                            // text: shortenDuration(dur, workingHour),
+                            backgroundColor: slaRed,
+                            isSlaOngoing: false,
+                        };
+                    }
+                } else {
+                    if (now < deadline.toDate()) {
+                        // const dur: number = durationControl(now, deadline, alertNotification);
+                        const dur: number = Math.round(
+                            (deadline.toDate().getTime() - now.getTime()) / (1000 * 60)
+                        );
+                        result = {
+                            text: `${text.container.ViewCase.mustReply} ${shortenDuration(dur, 24)}`,
+                            // text: shortenDuration(dur, 24),
+                            backgroundColor: dur > 60 ? slaBlue : slaOrange,
+                            isSlaOngoing: true
+                        };
+                    } else {
+                        const dur: number = durationControl(
+                            createdDate,
+                            now,
+                            alertNotification
+                        );
+                        result = {
+                            text: `${text.container.ViewCase.notAnsweredFor} ${shortenDuration(dur, workingHour)}`,
+                            // text: shortenDuration(dur, workingHour),
+                            backgroundColor: slaRed,
+                            isSlaOngoing: false,
+                        };
+                    }
+                }
+            } else {
+                if (ticket.timeResolution) {
+                    const rt = new Date(ticket.timeResolution);
+                    const dur: number = durationControl(createdDate, rt, alertNotification);
+                    if (new Date(ticket.timeResolution) < deadline.toDate()) {
+                        result = {
+                            text: `${text.container.ViewCase.resolution} ${shortenDuration(dur, workingHour)}`,
+                            // text: shortenDuration(dur, workingHour),
+                            backgroundColor: slaGreen,
+                            isSlaOngoing: false,
+                        };
+                    } else {
+                        result = {
+                            text: `${text.container.ViewCase.resolution} ${shortenDuration(dur, workingHour)}`,
+                            // text: shortenDuration(dur, workingHour),
+                            backgroundColor: slaRed,
+                            isSlaOngoing: false,
+                        };
+                    }
+                } else {
+                    if (now < deadline.toDate()) {
+                        // const dur: number = durationControl(now, deadline, alertNotification);
+                        const dur: number = Math.round(
+                            (deadline.toDate().getTime() - now.getTime()) / (1000 * 60)
+                        );
+                        result = {
+                            text: `${text.container.ViewCase.mustResolve} ${shortenDuration(dur, 24)}`,
+                            // text: shortenDuration(dur, 24),
+                            backgroundColor: dur > 60 * 24 ? slaBlue : slaOrange,
+                            isSlaOngoing: true
+                        };
+                    } else {
+                        const dur: number = durationControl(
+                            createdDate,
+                            now,
+                            alertNotification
+                        );
+                        result = {
+                            text: `${text.container.ViewCase.unresolvedFor} ${shortenDuration(dur, workingHour)}`,
+                            // text: shortenDuration(dur, workingHour),
+                            backgroundColor: slaRed,
+                            isSlaOngoing: false,
+                        };
+                    }
+                }
+            }
+
+            return result;
+        }
+    }
+
 
     useEffect(() => {
-        // 2023-08-31T11:20:36.108Z
-        // 2023-08-28T10:43:33.963Z
-        // 2023-08-28T06:00:00.963Z
 
-        // 2023-08-29T02:02:32.218Z
-        // const result = slaInfoControl('2023-09-07T11:26:31.282Z', alertNotification, 'frt')
-        // console.log(result)
-        // let timezoneOffset = -420
-        // let now = new Date();
-        // if (timezoneOffset) now.setHours(hourUTCToLocal(now.getHours(), timezoneOffset));
-        // console.log(now);
-        const alertNotification = {
-            expectedDate: {
-                isDueInNotifOn: true,
-                dueInNotifDays: 1,
-                isDueTodayNotifOn: true,
-                isOverdueNotifOn: true,
-                overdueNotifDays: 7
+
+        const instance: any = {
+            "name": "Ticketing ",
+            "displayName": "Ticketing ",
+            "groupId": "ba584504-5f52-4629-b0e5-35408b7d8a1f",
+            "enabled": true,
+            "tenantId": "ad1565a3-587e-4976-a416-e556be5eb44e",
+            "teamId": "19:90Bz51MLy8kGQ1XyOlvNLyTYZLFzJeJXpYlxm-U8owo1@thread.tacv2",
+            "channelId": "19:90Bz51MLy8kGQ1XyOlvNLyTYZLFzJeJXpYlxm-U8owo1@thread.tacv2",
+            "entityId": "ticketing_Ticketing",
+            "assignees": {
+                "type": "customAssignee",
+                "peoples": [
+                    {
+                        "id": "c4937347-46d7-46d0-8c17-5d3c3c4c8f45",
+                        "text": "Christie Cline",
+                        "imageInitials": "CC",
+                        "imageUrl": "",
+                        "secondaryText": "ChristieC@M365x95149415.OnMicrosoft.com",
+                        "key": "undefined"
+                    }
+                ]
             },
-            serviceLevelAgreement: {
-                slaWeek: '1_weekdays',
-                slaStartTime: { hours: -1, minutes: 0 },
-                slaEndTime: { hours: 14, minutes: 0 },
-                isBreachesFirstResponseTime: true,
-                breachesHoursFirstResponseTime: 0,
-                breachesAssigneeFirstResponseTime: [[Object]],
-                isFrtUrgent: true,
-                frtUrgentDuration: 1,
-                frtUrgentTime: '2_hours',
-                isFrtImportant: true,
-                frtImportantDuration: 4,
-                frtImportantTime: '2_hours',
-                isFrtMedium: true,
-                frtMediumDuration: 2,
-                frtMediumTime: '1_days',
-                isFrtLow: true,
-                frtLowDuration: 24,
-                frtLowTime: '2_hours',
-                isBreachesResolutionTime: true,
-                breachesHoursResolutionTime: 2,
-                breachesAssigneeResolutionTime: [[Object]],
-                isRtUrgent: true,
-                rtUrgentDuration: 3,
-                rtUrgentTime: '2_hours',
-                isRtImportant: true,
-                rtImportantDuration: 1,
-                rtImportantTime: '2_hours',
-                isRtMedium: true,
-                rtMediumDuration: 20,
-                rtMediumTime: '2_hours',
-                isRtLow: true,
-                rtLowDuration: 1,
-                rtLowTime: '2_hours'
-            }
+            "customFields": [],
+            "customFieldsLeft": [],
+            "customFieldsRight": [],
+            "optionalFieldsLeft": [
+                {
+                    "id": "5_tags",
+                    "title": "Tags",
+                    "status": "visible",
+                    "type": "dropdown",
+                    "isMandatory": false,
+                    "defaultValue": "",
+                    "choosePeopleFrom": "",
+                    "isSeeTicket": false,
+                    "isReceiveNotification": false,
+                    "isMultipleSection": false
+                },
+                {
+                    "id": "2_priority",
+                    "title": "Priority",
+                    "status": "visible",
+                    "type": "dropdown",
+                    "isMandatory": false,
+                    "defaultValue": "",
+                    "choosePeopleFrom": "",
+                    "isSeeTicket": false,
+                    "isReceiveNotification": false,
+                    "isMultipleSection": false
+                }
+            ],
+            "optionalFieldsRight": [
+                {
+                    "id": "4_expecteddate",
+                    "title": "Expected Date",
+                    "status": "visible",
+                    "type": "date",
+                    "isMandatory": false,
+                    "defaultValue": "",
+                    "choosePeopleFrom": "",
+                    "isSeeTicket": false,
+                    "isReceiveNotification": false,
+                    "isMultipleSection": false
+                }
+            ],
+            "automationRules": [],
+            "defaultAutomationRules": [
+                {
+                    "id": "999",
+                    "conditions": [
+                        {
+                            "id": "99999999-9999-9999-9999-999999999999",
+                            "key": "999_otherwise",
+                            "value": "Otherwise"
+                        }
+                    ],
+                    "actions": [],
+                    "isStopProcessingMoreRules": false,
+                    "enable": true
+                }
+            ],
+            "isAutoAssignIdleTickets": false,
+            "dayBeforeTicketsIdle": 2,
+            "alertNotification": {
+                "expectedDate": {
+                    "isDueInNotifOn": false,
+                    "dueInNotifDays": 3,
+                    "isDueTodayNotifOn": false,
+                    "isOverdueNotifOn": false,
+                    "overdueNotifDays": 7
+                },
+                "serviceLevelAgreement": {
+                    "slaWeek": "1_weekdays",
+                    "slaStartTime": {
+                        "hours": 2,
+                        "minutes": 0
+                    },
+                    "slaEndTime": {
+                        "hours": 15,
+                        "minutes": 0
+                    },
+                    "isBreachesFirstResponseTime": false,
+                    "breachesHoursFirstResponseTime": 0,
+                    "breachesAssigneeFirstResponseTime": [],
+                    "isFrtUrgent": true,
+                    "frtUrgentDuration": 2,
+                    "frtUrgentTime": "2_hours",
+                    "isFrtImportant": false,
+                    "frtImportantDuration": 1,
+                    "frtImportantTime": "2_hours",
+                    "isFrtMedium": false,
+                    "frtMediumDuration": 1,
+                    "frtMediumTime": "2_hours",
+                    "isFrtLow": false,
+                    "frtLowDuration": 1,
+                    "frtLowTime": "2_hours",
+                    "isBreachesResolutionTime": true,
+                    "breachesHoursResolutionTime": 3,
+                    "breachesAssigneeResolutionTime": [
+                        {
+                            "id": "c4937347-46d7-46d0-8c17-5d3c3c4c8f45",
+                            "text": "Christie Cline",
+                            "imageInitials": "CC",
+                            "imageUrl": "",
+                            "secondaryText": "ChristieC@M365x95149415.OnMicrosoft.com",
+                            "key": "undefined"
+                        }
+                    ],
+                    "isRtUrgent": true,
+                    "rtUrgentDuration": 2,
+                    "rtUrgentTime": "2_hours",
+                    "isRtImportant": false,
+                    "rtImportantDuration": 1,
+                    "rtImportantTime": "2_hours",
+                    "isRtMedium": false,
+                    "rtMediumDuration": 1,
+                    "rtMediumTime": "2_hours",
+                    "isRtLow": false,
+                    "rtLowDuration": 1,
+                    "rtLowTime": "2_hours"
+                }
+            },
+            "userPermission": [
+                {
+                    "key": "title",
+                    "selectedKey": "1_allCanEdit"
+                },
+                {
+                    "key": "description",
+                    "selectedKey": "1_allCanEdit"
+                },
+                {
+                    "key": "assignee",
+                    "selectedKey": "1_allCanEdit"
+                },
+                {
+                    "key": "expectedDate",
+                    "selectedKey": "1_allCanEdit"
+                },
+                {
+                    "key": "priority",
+                    "selectedKey": "1_allCanEdit"
+                }
+            ],
+            "isNewInstance": true,
+            "userList": {
+                "owners": [
+                    {
+                        "id": "1e85e536-124b-43aa-8662-7ba03f5ea87d",
+                        "text": "MOD Administrator",
+                        "secondaryText": "admin@M365x95149415.onmicrosoft.com",
+                        "imageInitials": "MA"
+                    }
+                ],
+                "members": []
+            },
+            "notifyOnNoAssignee": false,
+            "noAssigneeNotifRecipients": [],
+            "appVersion": "1.30.5",
+            "workflows": {
+                "ticket": [
+                    {
+                        "nodes": [
+                            {
+                                "id": "Open",
+                                "type": "startNode",
+                                "position": {
+                                    "x": -205.2049180327868,
+                                    "y": -57.13934426229507
+                                },
+                                "data": {
+                                    "label": "Open",
+                                    "recordResolutionSLA": false,
+                                    "color": "#fff"
+                                },
+                                "targetPosition": "left",
+                                "sourcePosition": "right",
+                                "deletable": false
+                            },
+                            {
+                                "id": "In Progress",
+                                "type": "textFieldNode",
+                                "position": {
+                                    "x": -24.368177503993962,
+                                    "y": -213.619285456832
+                                },
+                                "data": {
+                                    "label": "In Progress",
+                                    "recordResolutionSLA": false,
+                                    "color": "#1cd9d6"
+                                },
+                                "targetPosition": "left",
+                                "sourcePosition": "right"
+                            },
+                            {
+                                "id": "Closed",
+                                "type": "textFieldNode",
+                                "position": {
+                                    "x": 773.1812215977077,
+                                    "y": -62.75364748022107
+                                },
+                                "data": {
+                                    "label": "Closed",
+                                    "recordResolutionSLA": true,
+                                    "color": "#28b05f"
+                                },
+                                "targetPosition": "left",
+                                "sourcePosition": "right"
+                            },
+                            {
+                                "id": "Reopened",
+                                "type": "textFieldNode",
+                                "position": {
+                                    "x": 502.7629135476956,
+                                    "y": -398.0035164745823
+                                },
+                                "data": {
+                                    "label": "Reopened",
+                                    "recordResolutionSLA": false,
+                                    "color": "#ff970f"
+                                },
+                                "targetPosition": "left",
+                                "sourcePosition": "right"
+                            },
+                            {
+                                "width": 175,
+                                "height": 40,
+                                "id": "Fixed",
+                                "type": "textFieldNode",
+                                "position": {
+                                    "x": 138.28218947316367,
+                                    "y": 76.31269437543403
+                                },
+                                "data": {
+                                    "label": "Closed",
+                                    "recordResolutionSLA": true,
+                                    "color": "#bf4040"
+                                },
+                                "targetPosition": "left",
+                                "sourcePosition": "right",
+                                "positionAbsolute": {
+                                    "x": 138.28218947316367,
+                                    "y": 76.31269437543403
+                                },
+                                "dragging": false,
+                                "selected": true
+                            }
+                        ],
+                        "edges": [
+                            {
+                                "id": "03143c6f-c8bd-425e-9eff-31be3011dff9",
+                                "type": "labeledEdge",
+                                "label": "Start Ticket",
+                                "source": "Open",
+                                "sourceHandle": null,
+                                "target": "In Progress",
+                                "targetHandle": null,
+                                "markerEnd": {
+                                    "type": "arrowclosed",
+                                    "width": 25,
+                                    "height": 25
+                                },
+                                "data": {
+                                    "iconName": "Forward",
+                                    "isEditing": false,
+                                    "recordComment": false,
+                                    "authorizedUsers": [
+                                        "owner",
+                                        "assignee"
+                                    ]
+                                }
+                            },
+                            {
+                                "id": "bebee65c-974c-4afc-893e-b03672c168b4",
+                                "type": "labeledEdge",
+                                "label": "Close Ticket",
+                                "source": "Open",
+                                "sourceHandle": null,
+                                "target": "Closed",
+                                "targetHandle": null,
+                                "markerEnd": {
+                                    "type": "arrowclosed",
+                                    "width": 25,
+                                    "height": 25
+                                },
+                                "data": {
+                                    "iconName": "Archive",
+                                    "isEditing": false,
+                                    "recordComment": true,
+                                    "authorizedUsers": [
+                                        "owner",
+                                        "assignee",
+                                        "requestor"
+                                    ]
+                                }
+                            },
+                            {
+                                "id": "5a549dbb-fdbd-4874-88a7-b036d2653f8a",
+                                "type": "labeledEdge",
+                                "label": "Close Ticket",
+                                "source": "In Progress",
+                                "sourceHandle": null,
+                                "target": "Closed",
+                                "targetHandle": null,
+                                "markerEnd": {
+                                    "type": "arrowclosed",
+                                    "width": 25,
+                                    "height": 25
+                                },
+                                "data": {
+                                    "iconName": "Archive",
+                                    "isEditing": false,
+                                    "recordComment": true,
+                                    "authorizedUsers": [
+                                        "owner",
+                                        "assignee",
+                                        "requestor"
+                                    ]
+                                }
+                            },
+                            {
+                                "id": "4336ef9c-10b7-4c3f-9ac3-c1d9071786cd",
+                                "type": "labeledEdge",
+                                "label": "Reopen Ticket",
+                                "source": "Closed",
+                                "sourceHandle": null,
+                                "target": "Reopened",
+                                "targetHandle": null,
+                                "markerEnd": {
+                                    "type": "arrowclosed",
+                                    "width": 25,
+                                    "height": 25
+                                },
+                                "data": {
+                                    "iconName": "Reply",
+                                    "isEditing": false,
+                                    "recordComment": true,
+                                    "authorizedUsers": [
+                                        "owner",
+                                        "assignee",
+                                        "requestor"
+                                    ]
+                                }
+                            },
+                            {
+                                "id": "4e4d94ef-3fa0-4ec5-93c7-ba2e35c01727",
+                                "type": "labeledEdge",
+                                "label": "Close Ticket",
+                                "source": "Reopened",
+                                "sourceHandle": null,
+                                "target": "Closed",
+                                "targetHandle": null,
+                                "markerEnd": {
+                                    "type": "arrowclosed",
+                                    "width": 25,
+                                    "height": 25
+                                },
+                                "data": {
+                                    "iconName": "Archive",
+                                    "isEditing": false,
+                                    "recordComment": true,
+                                    "authorizedUsers": [
+                                        "owner",
+                                        "assignee",
+                                        "requestor"
+                                    ]
+                                }
+                            },
+                            {
+                                "id": "f5b86283-f6e0-4e39-8729-a6bd5512e219",
+                                "type": "labeledEdge",
+                                "label": "Closed",
+                                "source": "Open",
+                                "sourceHandle": null,
+                                "target": "Fixed",
+                                "targetHandle": null,
+                                "markerEnd": {
+                                    "type": "arrowclosed",
+                                    "strokeWidth": 2,
+                                    "width": 25,
+                                    "height": 25
+                                },
+                                "data": {
+                                    "isEditing": false,
+                                    "recordComment": true,
+                                    "authorizedUsers": [
+                                        "assignee",
+                                        "owner",
+                                        "requestor"
+                                    ],
+                                    "iconName": "Feedback"
+                                }
+                            },
+                            {
+                                "id": "85d8793b-d4d1-4f03-b6a4-baf26cd1d272",
+                                "type": "labeledEdge",
+                                "label": "Closed",
+                                "source": "Fixed",
+                                "sourceHandle": null,
+                                "target": "Closed",
+                                "targetHandle": null,
+                                "markerEnd": {
+                                    "type": "arrowclosed",
+                                    "strokeWidth": 2,
+                                    "width": 25,
+                                    "height": 25
+                                },
+                                "data": {
+                                    "isEditing": false,
+                                    "recordComment": true,
+                                    "authorizedUsers": [
+                                        "assignee",
+                                        "owner",
+                                        "requestor"
+                                    ],
+                                    "iconName": "InboxCheck"
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "isCustomWorkflow": true
+            },
+            "color": "#aa4567",
+            "favoriteFilters": [],
+            "userManagementMode": "manual",
+            "createdDateTime": "2025-06-17T08:15:24.977Z",
+            "assigneeVisibility": "1_seeAll",
+            "membershipType": "Regular",
+            "hasNewEmailNotificationConfig": true,
+            "emailSync": {
+                "emailAddress": "",
+                "displayName": "",
+                "objectId": "",
+                "tenantId": "",
+                "creatorTenantId": "",
+                "creatorId": "",
+                "isActive": true
+            },
+            "id": "516f12c0-5994-438a-a82c-070915743ec5",
+            "_rid": "wTtJAOFgVuHdIgAAAAAAAA==",
+            "_self": "dbs/wTtJAA==/colls/wTtJAOFgVuE=/docs/wTtJAOFgVuHdIgAAAAAAAA==/",
+            "_etag": "\"1d00e068-0000-0700-0000-686f78c50000\"",
+            "_attachments": "attachments/",
+            "lastTicketUpdated": "2025-07-10T08:24:24.709Z",
+            "api": {
+                "primaryKey": "d9907ab37bbc45f88676b032363e4a46",
+                "secondaryKey": "25ac0d41f61d433a9a9c742f392a56b9"
+            },
+            "_ts": 1752135877,
+            "idleTicketAssignedTo": []
         }
-        const createdDateTime = new Date("2023-12-28T03:29:49.077Z");
-        const slaInfo = slaInfoControl(createdDateTime, alertNotification, "frt");
-        console.log(slaInfo);
+
+        const ticket: any = {
+            "title": "Ticket 15",
+            "department": "",
+            "requestorName": "MOD Administrator",
+            "requestorId": "1e85e536-124b-43aa-8662-7ba03f5ea87d",
+            "category": "",
+            "status": "Open",
+            "customFields": {},
+            "instanceId": "516f12c0-5994-438a-a82c-070915743ec5",
+            "expectedDate": "2025-07-22T17:00:00.000Z",
+            "assigneeName": "Christie Cline",
+            "assigneeId": "c4937347-46d7-46d0-8c17-5d3c3c4c8f45",
+            "priority": "4_Urgent",
+            "attachments": [],
+            "description": "",
+            "createdDateTime": "2025-07-10T08:22:49.820Z",
+            "tags": [],
+            "lastInteraction": "2025-07-10T08:24:24.422Z",
+            "firstTimeResponse": "",
+            "timeResolution": "",
+            "isFrtEscalated": false,
+            "isRtEscalated": false,
+            "isFrtBreached": false,
+            "isRtBreached": false,
+            "createdBy": {
+                "id": "1e85e536-124b-43aa-8662-7ba03f5ea87d",
+                "text": "MOD Administrator",
+                "secondaryText": "admin@M365x95149415.onmicrosoft.com"
+            },
+            "lastUpdatedBy": {
+                "id": "1e85e536-124b-43aa-8662-7ba03f5ea87d",
+                "text": "MOD Administrator",
+                "secondaryText": "admin@M365x95149415.onmicrosoft.com"
+            },
+            "requestorEmail": "admin@M365x95149415.onmicrosoft.com",
+            "assigneeEmail": "ChristieC@M365x95149415.OnMicrosoft.com",
+            "workflow": [
+                {
+                    "id": "Open",
+                    "label": "Open",
+                    "color": "#fff",
+                    "recordResolutionSLA": false,
+                    "nextSteps": [
+                        {
+                            "targetId": "In Progress",
+                            "transitionLabel": "Start Ticket",
+                            "transitionIcon": "Forward",
+                            "authorizedUsers": [
+                                "owner",
+                                "assignee"
+                            ],
+                            "recordComment": false,
+                            "recordResolutionSLA": false
+                        },
+                        {
+                            "targetId": "Closed",
+                            "transitionLabel": "Close Ticket",
+                            "transitionIcon": "Archive",
+                            "authorizedUsers": [
+                                "owner",
+                                "assignee",
+                                "requestor"
+                            ],
+                            "recordComment": true,
+                            "recordResolutionSLA": true
+                        },
+                        {
+                            "targetId": "Fixed",
+                            "transitionLabel": "Closed",
+                            "transitionIcon": "Feedback",
+                            "authorizedUsers": [
+                                "assignee",
+                                "owner",
+                                "requestor"
+                            ],
+                            "recordComment": true,
+                            "recordResolutionSLA": true
+                        }
+                    ]
+                },
+                {
+                    "id": "In Progress",
+                    "label": "In Progress",
+                    "color": "#1cd9d6",
+                    "recordResolutionSLA": false,
+                    "nextSteps": [
+                        {
+                            "targetId": "Closed",
+                            "transitionLabel": "Close Ticket",
+                            "transitionIcon": "Archive",
+                            "authorizedUsers": [
+                                "owner",
+                                "assignee",
+                                "requestor"
+                            ],
+                            "recordComment": true,
+                            "recordResolutionSLA": true
+                        }
+                    ]
+                },
+                {
+                    "id": "Closed",
+                    "label": "Closed",
+                    "color": "#28b05f",
+                    "recordResolutionSLA": true,
+                    "nextSteps": [
+                        {
+                            "targetId": "Reopened",
+                            "transitionLabel": "Reopen Ticket",
+                            "transitionIcon": "Reply",
+                            "authorizedUsers": [
+                                "owner",
+                                "assignee",
+                                "requestor"
+                            ],
+                            "recordComment": true,
+                            "recordResolutionSLA": false
+                        }
+                    ]
+                },
+                {
+                    "id": "Reopened",
+                    "label": "Reopened",
+                    "color": "#ff970f",
+                    "recordResolutionSLA": false,
+                    "nextSteps": [
+                        {
+                            "targetId": "Closed",
+                            "transitionLabel": "Close Ticket",
+                            "transitionIcon": "Archive",
+                            "authorizedUsers": [
+                                "owner",
+                                "assignee",
+                                "requestor"
+                            ],
+                            "recordComment": true,
+                            "recordResolutionSLA": true
+                        }
+                    ]
+                },
+                {
+                    "id": "Fixed",
+                    "label": "Closed",
+                    "color": "#bf4040",
+                    "recordResolutionSLA": true,
+                    "nextSteps": [
+                        {
+                            "targetId": "Closed",
+                            "transitionLabel": "Closed",
+                            "transitionIcon": "InboxCheck",
+                            "authorizedUsers": [
+                                "assignee",
+                                "owner",
+                                "requestor"
+                            ],
+                            "recordComment": true,
+                            "recordResolutionSLA": true
+                        }
+                    ]
+                }
+            ],
+            "resolvedStatus": [
+                "Closed",
+                "Fixed"
+            ],
+            "isCustomWorkflow": true,
+            "ticketId": 15,
+            "origin": "WebApp",
+            "requestorUnseenEventCnt": 0,
+            "assigneeUnseenEventCnt": 1,
+            "id": "f7060884-871a-449d-8207-a599cd36dd91",
+            "_rid": "wTtJAN-sEFGtrgQAAAAAAA==",
+            "_self": "dbs/wTtJAA==/colls/wTtJAN-sEFE=/docs/wTtJAN-sEFGtrgQAAAAAAA==/",
+            "_etag": "\"0201be84-0000-0700-0000-686f78b80000\"",
+            "_attachments": "attachments/",
+            "_ts": 1752135864
+        }
+
+        const text = en;
+        const alertNotification = instance.alertNotification;
+
+        let info = slaInfoControl(ticket, alertNotification, "frt", text);
+        console.log(info);
+
     }, []);
     return (<div></div>)
 }

@@ -1,0 +1,738 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Ticketing Test",
+        "description": "Import from \"ticketing-api-test\" Function App",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "https://teamsworktest.azure-api.net/ticketing/api"
+        }
+    ],
+    "paths": {
+        "/InsertTrialInfo": {
+            "post": {
+                "summary": "InsertTrialInfo",
+                "operationId": "post-inserttrialinfo",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/GetTicketAttachments": {
+            "get": {
+                "summary": "GetTicketAttachments",
+                "operationId": "get-getticketattachments",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/GetReports": {
+            "get": {
+                "summary": "GetReports",
+                "operationId": "get-getreports",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            },
+            "post": {
+                "summary": "GetReports",
+                "operationId": "post-getreports",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/UpdateCustomField": {
+            "post": {
+                "summary": "UpdateCustomField",
+                "operationId": "post-updatecustomfield",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/messages": {
+            "post": {
+                "summary": "messages",
+                "operationId": "post-messages",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            },
+            "get": {
+                "summary": "messages",
+                "operationId": "get-messages",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/SendMail": {
+            "post": {
+                "summary": "SendMail",
+                "operationId": "post-sendmail",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/InsertUsageReport": {
+            "post": {
+                "summary": "InsertUsageReport",
+                "operationId": "post-insertusagereport",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/token": {
+            "post": {
+                "summary": "token",
+                "operationId": "post-token",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            },
+            "get": {
+                "summary": "token",
+                "operationId": "get-token",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/RegenerateKey": {
+            "get": {
+                "summary": "RegenerateKey",
+                "operationId": "get-regeneratekey",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/GetSubscriptionUsageCount": {
+            "post": {
+                "summary": "GetSubscriptionUsageCount",
+                "operationId": "post-getsubscriptionusagecount",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/SendEmailNotification": {
+            "post": {
+                "summary": "SendEmailNotification",
+                "operationId": "post-sendemailnotification",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/UploadAttachment": {
+            "post": {
+                "summary": "UploadAttachment",
+                "operationId": "post-uploadattachment",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/DeleteTag": {
+            "post": {
+                "summary": "DeleteTag",
+                "operationId": "post-deletetag",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/SendCardNotification": {
+            "post": {
+                "summary": "SendCardNotification",
+                "operationId": "post-sendcardnotification",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/InsertSetting": {
+            "post": {
+                "summary": "InsertSetting",
+                "operationId": "post-insertsetting",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/RequestGraphToken": {
+            "get": {
+                "summary": "RequestGraphToken",
+                "operationId": "get-requestgraphtoken",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/insertLog": {
+            "post": {
+                "summary": "insertLog",
+                "operationId": "post-insertlog",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/BulkPatchTicket": {
+            "post": {
+                "summary": "BulkPatchTicket",
+                "operationId": "post-bulkpatchticket",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/InsertUserBasicInfo": {
+            "post": {
+                "summary": "InsertUserBasicInfo",
+                "operationId": "post-insertuserbasicinfo",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/InsertTicket": {
+            "post": {
+                "summary": "InsertTicket",
+                "operationId": "post-insertticket",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/GetTickets": {
+            "post": {
+                "summary": "GetTickets",
+                "operationId": "post-gettickets",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            },
+            "get": {
+                "summary": "GetTickets",
+                "operationId": "get-gettickets",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/GetSettings": {
+            "post": {
+                "summary": "GetSettings",
+                "operationId": "post-getsettings",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            },
+            "get": {
+                "summary": "GetSettings",
+                "operationId": "get-getsettings",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/InsertTag": {
+            "post": {
+                "summary": "InsertTag",
+                "operationId": "post-inserttag",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/ActivateSaaSSubscription": {
+            "post": {
+                "summary": "ActivateSaaSSubscription",
+                "operationId": "post-activatesaassubscription",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/DeleteAttachment": {
+            "delete": {
+                "summary": "DeleteAttachment",
+                "operationId": "delete-deleteattachment",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/GetTagCategory": {
+            "get": {
+                "summary": "GetTagCategory",
+                "operationId": "get-gettagcategory",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            },
+            "post": {
+                "summary": "GetTagCategory",
+                "operationId": "post-gettagcategory",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/notify": {
+            "post": {
+                "summary": "notify",
+                "operationId": "post-notify",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/CancelSaaSSubscription": {
+            "post": {
+                "summary": "CancelSaaSSubscription",
+                "operationId": "post-cancelsaassubscription",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/GetTicketDetails": {
+            "get": {
+                "summary": "GetTicketDetails",
+                "operationId": "get-getticketdetails",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/GetSubscriptions": {
+            "get": {
+                "summary": "GetSubscriptions",
+                "operationId": "get-getsubscriptions",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/GetMembershipInfo": {
+            "get": {
+                "summary": "GetMembershipInfo",
+                "operationId": "get-getmembershipinfo",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/ResolveSaaSSubscription": {
+            "get": {
+                "summary": "ResolveSaaSSubscription",
+                "operationId": "get-resolvesaassubscription",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/PatchTicket": {
+            "post": {
+                "summary": "PatchTicket",
+                "operationId": "post-patchticket",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            },
+            "put": {
+                "summary": "PatchTicket",
+                "operationId": "put-patchticket",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/InsertEmailInfo": {
+            "post": {
+                "summary": "InsertEmailInfo",
+                "operationId": "post-insertemailinfo",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/InsertInstance": {
+            "post": {
+                "summary": "InsertInstance",
+                "operationId": "post-insertinstance",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/GetEmailInfo": {
+            "get": {
+                "summary": "GetEmailInfo",
+                "operationId": "get-getemailinfo",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/PatchConvRef": {
+            "post": {
+                "summary": "PatchConvRef",
+                "operationId": "post-patchconvref",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/GetDisabledInstance": {
+            "get": {
+                "summary": "GetDisabledInstance",
+                "operationId": "get-getdisabledinstance",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/ParseMail": {
+            "post": {
+                "summary": "ParseMail",
+                "operationId": "post-parsemail",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/InsertTagCategory": {
+            "post": {
+                "summary": "InsertTagCategory",
+                "operationId": "post-inserttagcategory",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/GetInstanceDetails": {
+            "get": {
+                "summary": "GetInstanceDetails",
+                "operationId": "get-getinstancedetails",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/PatchUserBasicInfo": {
+            "post": {
+                "summary": "PatchUserBasicInfo",
+                "operationId": "post-patchuserbasicinfo",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/PatchUsageReport": {
+            "post": {
+                "summary": "PatchUsageReport",
+                "operationId": "post-patchusagereport",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/PatchSetting": {
+            "post": {
+                "summary": "PatchSetting",
+                "operationId": "post-patchsetting",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/PatchInstance": {
+            "post": {
+                "summary": "PatchInstance",
+                "operationId": "post-patchinstance",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/PatchEmailInfo": {
+            "post": {
+                "summary": "PatchEmailInfo",
+                "operationId": "post-patchemailinfo",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/InsertCommentWithAttachment": {
+            "post": {
+                "summary": "InsertCommentWithAttachment",
+                "operationId": "post-insertcommentwithattachment",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/GetInitialData": {
+            "get": {
+                "summary": "GetInitialData",
+                "operationId": "get-getinitialdata",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/GetUserBasicInfo": {
+            "get": {
+                "summary": "GetUserBasicInfo",
+                "operationId": "get-getuserbasicinfo",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/GetUsageReport": {
+            "get": {
+                "summary": "GetUsageReport",
+                "operationId": "get-getusagereport",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/PatchComment": {
+            "post": {
+                "summary": "PatchComment",
+                "operationId": "post-patchcomment",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/GetUserActiveInstances": {
+            "get": {
+                "summary": "GetUserActiveInstances",
+                "operationId": "get-getuseractiveinstances",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/GetTrialInfo": {
+            "get": {
+                "summary": "GetTrialInfo",
+                "operationId": "get-gettrialinfo",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/GetComments": {
+            "get": {
+                "summary": "GetComments",
+                "operationId": "get-getcomments",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/InsertComment": {
+            "post": {
+                "summary": "InsertComment",
+                "operationId": "post-insertcomment",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/GenerateKey": {
+            "post": {
+                "summary": "GenerateKey",
+                "operationId": "post-generatekey",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/GetAllComments": {
+            "get": {
+                "summary": "GetAllComments",
+                "operationId": "get-getallcomments",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        },
+        "/DeleteTagCategory": {
+            "get": {
+                "summary": "DeleteTagCategory",
+                "operationId": "get-deletetagcategory",
+                "responses": {
+                    "200": {
+                        "description": null
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "apiKeyHeader": {
+                "type": "apiKey",
+                "name": "Ocp-Apim-Subscription-Key",
+                "in": "header"
+            },
+            "apiKeyQuery": {
+                "type": "apiKey",
+                "name": "subscription-key",
+                "in": "query"
+            }
+        }
+    },
+    "security": [
+        {
+            "apiKeyHeader": []
+        },
+        {
+            "apiKeyQuery": []
+        }
+    ]
+}

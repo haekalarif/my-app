@@ -7,6 +7,7 @@ import { ExistingKeyOperation } from "@azure/cosmos"
 import { format } from "date-fns";
 import IconPicker from "../IconPicker";
 import FloatingPanel from "../FloatingPanel";
+import useDownloader from 'react-use-downloader';
 
 interface INodeData {
     // properties default
@@ -704,6 +705,7 @@ const TransitionContent: React.FunctionComponent<ITransitionContent> = (props: I
     </>)
 }
 const Board: React.FunctionComponent = (props) => {
+    const { download: reactDownload } = useDownloader();
     const [nodes, setNodes] = useState<ReactFlow.Node<INodeData, NodeTypeEnum>[]>([]);
     const [edges, setEdges] = useState<ReactFlow.Edge<IEdgeData>[]>([]);
     const [activeStatus, setActiveStatus] = useState<ReactFlow.Node<INodeData, NodeTypeEnum>>();
@@ -5585,7 +5587,14 @@ const Board: React.FunctionComponent = (props) => {
         // console.log(option);
         setSelectedIcon(String(option.key));
     }
+    const handleDownload = () => {
+        const jsonString = `data:text/json;charset=utf-8,${encodeURIComponent(
+            JSON.stringify({ nodes, edges })
+        )}`;
 
+        console.log(jsonString);
+        reactDownload(jsonString, "workflow.json");
+    }
     useEffect(() => {
         setNodes(initialNodes);
         setEdges(initialEdges);
@@ -5918,6 +5927,7 @@ const Board: React.FunctionComponent = (props) => {
                         <DefaultButton
                             iconProps={{ iconName: "Download" }}
                             text="Download"
+                            onClick={handleDownload}
                         />
                         <ActionButton iconProps={{ iconName: "Upload" }} text="Upload" onClick={upload} />
                         <ActionButton iconProps={{ iconName: "Download" }} text='Download' onClick={download} />

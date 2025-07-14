@@ -26,12 +26,51 @@ const checkboxStyles = {
   },
 };
 
-export const PeoplePickerNormalExample: React.FunctionComponent = () => {
+const members = [
+  {
+    "id": "4d7048b4-f1df-42fa-b749-f7edfa144d00",
+    "text": "MOD Administrator",
+    "secondaryText": "admin@M365x86451899.onmicrosoft.com",
+    "imageInitials": "MA"
+  },
+  {
+    "id": "a237d5db-7b92-42c4-a66f-f70743013a01",
+    "text": "Adele Vance",
+    "secondaryText": "AdeleV@M365x86451899.OnMicrosoft.com",
+    "imageInitials": "AV",
+    "key": "undefined"
+  },
+  {
+    "id": "1b003421-b31b-472e-ac38-4093c8353cfa",
+    "text": "MOD Administrator",
+    "secondaryText": "admin@m365x53068480.onmicrosoft.com",
+    "imageInitials": "MA",
+    "key": "undefined"
+  },
+  {
+    "id": "9bedbebc-1d1c-4de5-b7c7-3411500b01c6",
+    "text": "Alex Wilber",
+    "secondaryText": "AlexW@M365x86451899.OnMicrosoft.com",
+    "imageInitials": "AW",
+    "key": "undefined"
+  },
+  {
+    "id": "b1fd0d8b-5afa-4f79-aa70-c474d06c1f77",
+    "text": "Grady Archie",
+    "secondaryText": "GradyA@M365x86451899.OnMicrosoft.com",
+    "imageInitials": "GA",
+    "key": "undefined"
+  }
+]
+
+
+export const PeoplePickerNormalExample: React.FunctionComponent<any> = (props: any) => {
   const [delayResults, setDelayResults] = React.useState(false);
-  const [isPickerDisabled, setIsPickerDisabled] = React.useState(false);
+  const [isPickerDisabled, setIsPickerDisabled] = React.useState(true);
   const [showSecondaryText, setShowSecondaryText] = React.useState(false);
-  const [mostRecentlyUsed, setMostRecentlyUsed] = React.useState<IPersonaProps[]>([]);
-  const [peopleList, setPeopleList] = React.useState<IPersonaProps[]>([]);
+  const [mostRecentlyUsed, setMostRecentlyUsed] = React.useState<IPersonaProps[]>(members);
+  const [peopleList, setPeopleList] = React.useState<IPersonaProps[]>(members);
+  const [isPrinting, setIsPrinting] = React.useState<boolean>(false);
 
   const picker = React.useRef(null);
 
@@ -110,6 +149,23 @@ export const PeoplePickerNormalExample: React.FunctionComponent = () => {
   const onToggleShowSecondaryText = (): void => {
     setShowSecondaryText(!showSecondaryText);
   };
+  const keydownHandler = (e) => {
+    console.log(e)
+    if (e.ctrlKey && e.code == "KeyP") setIsPrinting(true);
+    setTimeout(() => setIsPrinting(false), 1500)
+  };
+
+  const onafterPrint = (e) => {
+    console.log(e);
+  }
+  React.useEffect(() => {
+    document.addEventListener('keydown', keydownHandler);
+    document.addEventListener('onafterprint', onafterPrint);
+    return () => {
+      document.removeEventListener('keydown', keydownHandler);
+      document.removeEventListener('onafterprint', onafterPrint);
+    }
+  }, [])
 
   return (
     <div>
@@ -136,10 +192,14 @@ export const PeoplePickerNormalExample: React.FunctionComponent = () => {
         componentRef={picker}
         onInputChange={onInputChange}
         resolveDelay={300}
-        disabled={isPickerDisabled}
-        selectedItems={[{
-          text: "Haekal Arif Rozikin"
-        }]}
+        styles={{
+          text: isPrinting && {
+            "&::after": {
+              background: "unset"
+            }
+          }
+        }}
+        onChange={props.onChange}
       />
       {/* <Checkbox
         label="Disable People Picker"

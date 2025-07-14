@@ -1,13 +1,18 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Scheduler } from "@aldabil/react-scheduler";
 import { ProcessedEvent, SchedulerRef } from '@aldabil/react-scheduler/types';
 import { Button } from 'antd';
 import { View } from '@aldabil/react-scheduler/components/nav/Navigation';
 import { Pivot, PivotItem } from '@fluentui/react';
+import bcrypt from "bcryptjs";
 
 const TabPivot: React.FC<any> = (props) => {
 
-
+    useEffect(() => {
+        const salt = bcrypt.genSaltSync(10);
+        const hash = bcrypt.hashSync("admin", salt);
+        console.log(hash);
+    }, []);
     return (
         <Pivot
             aria-label="Setting Pivot"

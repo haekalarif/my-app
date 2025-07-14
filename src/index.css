@@ -94,3 +94,22 @@ code {
   border-style: solid !important;
   border-color: rgb(96, 94, 92) !important;
 }
+
+/* button:hover {
+  transform: scale(1.2);
+} */
+
+.container {
+  display: flex;
+  gap: 16px;
+  /* Optional spacing between boxes */
+}
+
+.box {
+  flex: 1;
+  /* Ensures all boxes grow equally */
+  padding: 16px;
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  text-align: center;
+}

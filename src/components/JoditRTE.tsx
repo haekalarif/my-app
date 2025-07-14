@@ -15,8 +15,8 @@ const JoditRTE: React.FC<any> = (props) => {
     // const [content, setContent] = useState("");
     const buttons = ['paragraph', 'font', 'fontsize', 'brush', '|', 'bold', 'italic', 'underline', 'strikethrough', '|', 'align', 'ol', 'ul', '|', 'link', 'image'];
     const config: any = useMemo(() => ({
-        placeholder: placeholder ? placeholder : "",
-        toolbar: props.isShowToolbar,
+        placeholder: props.placeholder ? props.placeholder : "",
+        toolbar: true,
         disabled: props.disabled,
         readonly: false,
         showXPathInStatusbar: false,
@@ -36,9 +36,14 @@ const JoditRTE: React.FC<any> = (props) => {
             img: false,
         },
         link: {
+            // formTemplate: (editor: Jodit): string | HTMLElement => {
+            //     console.log(editor);
+            //     return "";
+            // },
             followOnDblClick: false,
             noFollowCheckbox: false,
-            openInNewTabCheckbox: false,
+            openInNewTabCheckbox: true,
+            modeClassName: "select",
         },
         controls: {
             font: {
@@ -59,21 +64,28 @@ const JoditRTE: React.FC<any> = (props) => {
             },
         },
         colorPickerDefaultTab: "text",
+        style: props.style,
+        // tabIndex: 0
     }), [disabled]);
 
     return (
         // <div>
+
         <JoditEditor
-            ref={editorRef}
+            ref={props.ref}
             value={value}
             config={config}
             // onBlur={onBlurEditor} // preferred to use only this option to update the content for performance reasons
-            onChange={onChange}
+            onChange={(newValue) => {
+                console.log(newValue);
+            }}
             onBlur={newContent => {
                 console.log("on Blur")
                 console.log(editorRef)
                 editorRef?.current?.input?.focus()
             }}
+            className="my-jodit"
+
         />
         // </div>
     );

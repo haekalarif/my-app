@@ -1,0 +1,32 @@
+List semua yang ada di front end dan back end yang berkaitan dengan status yang di hardcoded pada ticketing app
+contohnya: menu action button di ticket list ditampilkan berdasarkan status
+
+Front End:
+
+Landing Page:
+ 1. Action Button di ticket list
+ 2. Dropdown filter by status
+
+View Ticket:
+ 1. Menu button pada header
+ 2. Label Status
+
+Dashboard:
+ 1. Box Info berdasarkan status open dan resolved
+ 2. Card "Ticket Status and Assignee"
+ 3. Created Vs Resolved
+
+
+Back End:
+
+1. ExpectedDateScheduler
+2. IdleTicketScheduler
+3. DailySlaReminder
+
+
+- Persona Tab
+
+Flow App yang berkaitan dengan status
+
+1. Create ticket lewat APP / Incoming Email. API (InsertTicket, ParseMail) // Open
+2. Update status ticket lewat action button di ticket list, view ticket. API (PatchTicket) // All Status

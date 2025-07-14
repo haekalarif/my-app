@@ -92,7 +92,7 @@ const Row: React.FunctionComponent<any> = (props: { columns: IColumn[], items: I
                         <Draggable key={item.id} draggableId={String(item.id)} index={index}>
                             {(provided: any, snapshot: any) => (
                                 <div
-                                    ref={provided.innerRef}
+                                    ref={undefined}
                                     {...provided.dragHandleProps}
                                     {...provided.draggableProps}
                                     isDragging={snapshot.isDragging}
@@ -168,16 +168,16 @@ const List = (props) => {
         },
     ]
     const items = [
-        // {
-        //     id: 1,
-        //     field: "Priority",
-        //     rule: "ABC"
-        // },
-        // {
-        //     id: 2,
-        //     field: "Assignee",
-        //     rule: "DEF"
-        // }
+        {
+            id: 1,
+            field: "Priority",
+            rule: "ABC"
+        },
+        {
+            id: 2,
+            field: "Assignee",
+            rule: "DEF"
+        }
     ]
     async function loadData() {
         // const payload = {
@@ -27980,11 +27980,11 @@ const List = (props) => {
                 ]
             }
         ]
-        
+
         console.log(data.map((item) => item.id))
-        
-        
-        
+
+
+
     }
     React.useEffect(() => {
         loadData();

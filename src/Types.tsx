@@ -333,3 +333,215 @@ export const defaultWorkflow = {
         ]
     }
 }
+
+
+// Social network friend recomendation system database
+
+interface Users {
+    id: string,
+    username: string,
+    password: string, // We will using bcrypt,
+    name: string,
+    age: number,
+    address: string,
+    job: string,
+    hobbies: string[],
+    email: string;
+    profileUrl: string
+    instagram: string,
+    tiktok: string,
+    facebook: string,
+    noTelepon: string
+}
+
+interface UserRelationship {
+    id: string,
+    userId1: string,
+    userId2: string,
+}
+
+interface NotificationLog {
+    from: string, //UserId1,
+    to: string, //UserId2,
+    action: "REQUESTING FRIENDSHIP" | "ACCEPTING FRIENDSHIP"
+}
+
+let userRelationship: UserRelationship[] = [
+    {
+        id: "",
+        userId1: "00da068b-e527-4dfa-993d-aea7266bf831",
+        userId2: "2106bdbd-77f4-4de8-88b6-45e52167ab64"
+    },
+    {
+        id: "",
+        userId1: "39a5392a-44e3-416b-81b9-ded6bacf1c80",
+        userId2: "00da068b-e527-4dfa-993d-aea7266bf831",
+    },
+    {
+        id: "",
+        userId1: "00da068b-e527-4dfa-993d-aea7266bf831",
+        userId2: "3c7c4954-aa4e-487c-a669-6576a1204d81",
+    },
+    {
+        id: "",
+        userId1: "2106bdbd-77f4-4de8-88b6-45e52167ab64",
+        userId2: "52d3ad6b-5dd7-4f51-b81e-48893a40daf8",
+    },
+    {
+        id: "",
+        userId1: "608a4baf-3215-4491-a31f-bb0fe897412b",
+        userId2: "2106bdbd-77f4-4de8-88b6-45e52167ab64",
+    },
+    {
+        id: "",
+        userId1: "39a5392a-44e3-416b-81b9-ded6bacf1c80",
+        userId2: "7392e1c1-7089-49f0-99d8-31f08a3e12f7",
+    },
+    {
+        id: "",
+        userId1: "77deb7b1-2b57-441a-96e1-78ecdff12fb6",
+        userId2: "39a5392a-44e3-416b-81b9-ded6bacf1c80",
+    },
+    {
+        id: "",
+        userId1: "77deb7b1-2b57-441a-96e1-78ecdff12fb6",
+        userId2: "39a5392a-44e3-416b-81b9-ded6bacf1c80",
+    },
+    {
+        id: "",
+        userId1: "3c7c4954-aa4e-487c-a669-6576a1204d81",
+        userId2: "837e35ec-e846-43d4-be35-c852702d5be1",
+    },
+    {
+        id: "",
+        userId1: "87732d8d-37eb-4262-a4c1-9efc895a4b37",
+        userId2: "3c7c4954-aa4e-487c-a669-6576a1204d81",
+    },
+    {
+        id: "",
+        userId1: "52d3ad6b-5dd7-4f51-b81e-48893a40daf8",
+        userId2: "9e370651-0c53-4dde-976d-3d35ffc2dbba",
+    },
+    {
+        id: "",
+        userId1: "77deb7b1-2b57-441a-96e1-78ecdff12fb6",
+        userId2: "9ee40580-ada8-4013-ab9b-12122f05c52f",
+    },
+    {
+        id: "",
+        userId1: "837e35ec-e846-43d4-be35-c852702d5be1",
+        userId2: "a4be14ff-660d-4708-9b40-06161f6d8d19",
+    },
+    {
+        id: "",
+        userId1: "a697c436-f42e-4369-a870-26b3bfb7b7a0",
+        userId2: "87732d8d-37eb-4262-a4c1-9efc895a4b37",
+    },
+
+]
+
+//API Specification
+
+
+//  1. /api/login
+
+// request
+// req = {
+//     username: "",
+//     password: ""
+// }
+
+// response
+
+
+export interface ISupplierAssessment {
+    id: string,
+    supplierId: string,
+    supplierCode: string,
+    supplierName: string,
+    initiationCriteria: ICriteria,
+    normalizationCriteria: ICriteria,
+    finalScore: number,
+    createdAt: string
+}
+interface ICriteria {
+    productQuality: number,
+    onTimeDelivery: number,
+    stockAvailability: number,
+    communicationResponse: number,
+    completnessDocument: number,
+    warranty: number,
+    easeOrderingProcess: number
+    productPrice: number,
+    shippingCosts: number,
+    leadTime: number
+}
+export const Criterias: { id: string, weight: string, type: "benefit" | "cost" }[] = [
+    {
+        id: "productQuality",
+        weight: "20%",
+        type: "benefit"
+    },
+    {
+        id: "onTimeDelivery",
+        weight: "15%",
+        type: "benefit"
+    },
+    {
+        id: "stockAvailability",
+        weight: "10%",
+        type: "benefit"
+    },
+    {
+        id: "communicationResponse",
+        weight: "8%",
+        type: "benefit"
+    },
+    {
+        id: "completnessDocument",
+        weight: "5%",
+        type: "benefit"
+    },
+    {
+        id: "warranty",
+        weight: "7%",
+        type: "benefit"
+    },
+    {
+        id: "easeOrderingProcess",
+        weight: "5%",
+        type: "benefit"
+    },
+    {
+        id: "productPrice",
+        weight: "15%",
+        type: "cost"
+    },
+    {
+        id: "shippingCosts",
+        weight: "10%",
+        type: "cost"
+    },
+    {
+        id: "leadTime",
+        weight: "5%",
+        type: "cost"
+    }
+]
+
+export function percentToDecimal(str): number {
+    return parseFloat(str) / 100;
+}
+
+export function sumArray(numbers: number[]) {
+    let sum = 0;
+    for (let i = 0; i < numbers.length; i++) {
+        sum += numbers[i];
+    }
+    return sum;
+}
+
+export function roundValue(value, decimals = 4) {
+    const factor = Math.pow(10, decimals);
+    return Math.round(value * factor) / factor;
+}

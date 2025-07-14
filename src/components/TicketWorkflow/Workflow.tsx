@@ -11,7 +11,7 @@ interface IAttachment {
     id: string,
     isImage?: boolean,
     isHyperlink?: boolean,
-    isArchive: boolean
+    isArchive?: boolean
 }
 interface ITicketTag {
     tagCategoryId?: string,
@@ -51,7 +51,7 @@ export interface ICase {
     resolution?: string;
     firstResolutionDate?: Date;
     lastResolutionDate?: Date;
-    createdDateTime?: Date;
+    createdDateTime?: string;
     tags?: ITicketTag[];
     lastInteraction?: Date;
     firstTimeResponse: Date | string;
@@ -68,7 +68,15 @@ export interface ICase {
     createdBy?: IPersonaProps,
     requestorEmail?: string,
     assigneeEmail?: string,
-    workflow?: IWorkflowStep[]
+    workflow?: IWorkflowStep[],
+
+    /**
+  * Requirement for sla notification
+  */
+    breachFrtAt?: Date | string,
+    breachRtAt?: Date | string,
+    escalateFrtAt?: Date | string,
+    escalateRtAt?: Date | string
 };
 const CaseActionEnum = {
     attach: "attachToCase",

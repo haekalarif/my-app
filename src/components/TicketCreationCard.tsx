@@ -1,4 +1,4 @@
-import { Stack, mergeStyleSets } from "@fluentui/react";
+import { Stack, mergeStyleSets, Text } from "@fluentui/react";
 import React from "react";
 
 
@@ -7,7 +7,8 @@ const styles = mergeStyleSets({
         width: "500px",
         padding: "10px",
         border: "1px solid #ededed",
-        borderRadius: "8px"
+        borderRadius: "8px",
+        marginBottom: 20
     },
     header: {
         display: "flex",
@@ -54,6 +55,24 @@ const styles = mergeStyleSets({
     dateTime: {
         fontSize: 12,
         color: "#787878"
+    },
+    wrapper: {
+        fontFamily: "'Segoe UI', 'Arial', 'sans-serif'",
+    },
+    name: {
+        fontSize: 16,
+        fontWeight: 500
+    },
+    company: {
+        fontWeight: "lighter"
+    },
+    timestamp: {
+        fontSize: 12,
+        color: "#b1b1b1",
+        marginBottom: 14
+    },
+    commentMsg: {
+        fontSize: 14
     }
 })
 
@@ -94,6 +113,16 @@ const TicketCreationCard: React.FunctionComponent = (props) => {
                     <span className={styles.dateTime}>03 April 2024 17:21</span>
                 </div>
             </div>
+
+            <Stack className={styles.wrapper}>
+                <span className={styles.name}>
+                    Marc commented <span className={styles.company}>ticket</span>.
+                </span>
+                <span className={styles.timestamp}>
+                    Wednesday, July 17, 2024 14:14 (UTC)
+                </span>
+                <span className={styles.commentMsg}>Bonjour Cristian,</span>
+            </Stack>
         </Stack>
     )
 }
